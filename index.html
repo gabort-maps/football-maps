@@ -15,35 +15,44 @@
     <div id="map"></div>
 
     <script>
-      function initMap() {
-  var club = {
-    name: "Cerdanyola Valles, F.C.",
-    players: 858,
-    lat: 41.492119937849964,
-    lng: 2.1276293504646615
-  };
+     function initMap() {
+    var map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 7,
+        center: { lat: 41.5, lng: 2.1 },  // Adjust this to center around your data
+        mapId: "6d21538ba521f729"
+    });
 
-  var map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 7,
-    center: { lat: club.lat, lng: club.lng },
-    mapId: "6d21538ba521f729"
-  });
+    // Load the CSV file from GitHub
+    fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
+        .then(response => response.text())
+        .then(data => {
+            const rows = data.split("\n").slice(1); // Remove header
+            rows.forEach(row => {
+                const columns = row.split(",");
+                if (columns.length >= 4) { // Ensure it's a valid row
+                    const name = columns[0].trim();
+                    const lat = parseFloat(columns[1]);
+                    const lng = parseFloat(columns[2]);
+                    const players = parseInt(columns[3]);
 
-  // ✅ FIXED: Properly creating the custom marker element
-  const customIcon = document.createElement("img");
-  customIcon.src = "https://raw.githubusercontent.com/gabort-maps/football-maps/main/gtphoto%20(1).JPG"; // Replace with your custom icon URL
-  customIcon.style.width = "40px";  
-  customIcon.style.height = "40px"; 
+                    // Create the custom icon
+                    const customIcon = document.createElement("img");
+                    customIcon.src = "https://raw.githubusercontent.com/gabort-maps/football-maps/main/gtphoto%20(1).JPG"; // Use your custom image
+                    customIcon.style.width = "40px";
+                    customIcon.style.height = "40px";
 
-  // ✅ FIXED: Assigning the custom element correctly
-  const marker = new google.maps.marker.AdvancedMarkerElement({
-    map: map,
-    position: { lat: club.lat, lng: club.lng },
-    title: club.name,
-    content: customIcon // This was missing before
-  });
+                    // Add marker to the map
+                    const marker = new google.maps.marker.AdvancedMarkerElement({
+                        map: map,
+                        position: { lat: lat, lng: lng },
+                        title: name,
+                        content: customIcon
+                    });
+                }
+            });
+        })
+        .catch(error => console.error("Error loading CSV:", error));
 }
-
 
     </script>
 
