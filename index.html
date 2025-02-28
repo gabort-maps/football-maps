@@ -15,7 +15,7 @@
     <div id="map"></div>
 
     <script>
-  function initMap() {
+ function initMap() {
     var map = new google.maps.Map(document.getElementById("map"), {
         zoom: 7,
         center: { lat: 41.5, lng: 2.1 },  // Adjust this to center around your data
@@ -35,28 +35,46 @@
                     const lng = parseFloat(columns[2]);
                     const players = parseInt(columns[3]);
 
-                    // Calculate marker size based on player count
-                    const markerSize = Math.min(80, 30 + players / 20); // Limits max size to 80px
+                    // Determine bubble size based on player count
+                    const markerSize = Math.min(80, 30 + players / 20); // Max size: 80px, Min: 30px
 
-                    // Create the custom icon with dynamic size
-                    const customIcon = document.createElement("img");
-                    customIcon.src = "https://raw.githubusercontent.com/gabort-maps/football-maps/main/gtphoto%20(1).JPG"; // Use your custom image
-                    customIcon.style.width = markerSize + "px";
-                    customIcon.style.height = markerSize + "px";
+                    // Assign a color based on player count category
+                    let bubbleColor = "green"; // Default: Very Small Clubs (<150)
+                    if (players >= 150 && players < 300) {
+                        bubbleColor = "blue"; // Small Clubs (150-299)
+                    } else if (players >= 300 && players < 500) {
+                        bubbleColor = "yellow"; // Medium Clubs (300-499)
+                    } else if (players >= 500 && players < 700) {
+                        bubbleColor = "orange"; // Large Clubs (500-699)
+                    } else if (players >= 700) {
+                        bubbleColor = "red"; // Very Large Clubs (700+)
+                    }
+
+                    // Create a colored bubble marker
+                    const customBubble = document.createElement("div");
+                    customBubble.style.width = markerSize + "px";
+                    customBubble.style.height = markerSize + "px";
+                    customBubble.style.borderRadius = "50%";
+                    customBubble.style.backgroundColor = bubbleColor;
+                    customBubble.style.display = "flex";
+                    customBubble.style.justifyContent = "center";
+                    customBubble.style.alignItems = "center";
+                    customBubble.style.color = "white";
+                    customBubble.style.fontWeight = "bold";
+                    customBubble.innerText = players; // Display player count inside the bubble
 
                     // Add marker to the map
                     const marker = new google.maps.marker.AdvancedMarkerElement({
                         map: map,
                         position: { lat: lat, lng: lng },
                         title: name,
-                        content: customIcon
+                        content: customBubble
                     });
                 }
             });
         })
         .catch(error => console.error("Error loading CSV:", error));
 }
-
 
     </script>
 
