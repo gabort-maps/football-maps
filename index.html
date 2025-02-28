@@ -25,10 +25,10 @@
         };
 
         // Center the map on the club's location
-        var center = { lat: club.lat, lng: club.lng };
-        var map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 7,
-          center: center
+       var map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 7,
+    center: { lat: club.lat, lng: club.lng },
+    mapId: "6d21538ba521f729"  // ✅ This is your new Map ID
         });
 
        // Create an Advanced Marker
