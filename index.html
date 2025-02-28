@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Football Clubs Map</title>
+    <style>
+      /* The map will take up the full viewport */
+      #map {
+        height: 100vh;
+        width: 100%;
+      }
+    </style>
+    <script>
+      function initMap() {
+        // Center the map (example: Budapest)
+        var center = { lat: 47.4979, lng: 19.0402 };
+        var map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 7,
+          center: center
+        });
+
+        // Add a marker with a custom icon (update the icon URL as needed)
+        var marker = new google.maps.Marker({
+          position: center,
+          map: map,
+          icon: {
+            url: "https://yourdomain.com/path/to/icon.png", 
+            scaledSize: new google.maps.Size(40, 40)
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <!-- Google Maps API (replace YOUR_API_KEY below when you have one) -->
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+    </script>
+  </body>
+</html>
