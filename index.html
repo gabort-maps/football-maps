@@ -15,7 +15,7 @@
     <div id="map"></div>
 
     <script>
-     function initMap() {
+  function initMap() {
     var map = new google.maps.Map(document.getElementById("map"), {
         zoom: 7,
         center: { lat: 41.5, lng: 2.1 },  // Adjust this to center around your data
@@ -35,11 +35,14 @@
                     const lng = parseFloat(columns[2]);
                     const players = parseInt(columns[3]);
 
-                    // Create the custom icon
+                    // Calculate marker size based on player count
+                    const markerSize = Math.min(80, 30 + players / 20); // Limits max size to 80px
+
+                    // Create the custom icon with dynamic size
                     const customIcon = document.createElement("img");
                     customIcon.src = "https://raw.githubusercontent.com/gabort-maps/football-maps/main/gtphoto%20(1).JPG"; // Use your custom image
-                    customIcon.style.width = "40px";
-                    customIcon.style.height = "40px";
+                    customIcon.style.width = markerSize + "px";
+                    customIcon.style.height = markerSize + "px";
 
                     // Add marker to the map
                     const marker = new google.maps.marker.AdvancedMarkerElement({
@@ -53,6 +56,7 @@
         })
         .catch(error => console.error("Error loading CSV:", error));
 }
+
 
     </script>
 
