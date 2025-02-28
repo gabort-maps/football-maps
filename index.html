@@ -33,9 +33,16 @@
 
        // Create an Advanced Marker
   const marker = new google.maps.marker.AdvancedMarkerElement({
-    map: map,
-    position: { lat: club.lat, lng: club.lng },
-    title: club.name
+  map: map,
+  position: { lat: club.lat, lng: club.lng },
+  title: club.name,
+  content: document.createElement("img")
+});
+
+marker.content.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Red_circle.svg/1200px-Red_circle.svg.png"; // Replace with your icon URL
+marker.content.style.width = "40px";  // Adjust size
+marker.content.style.height = "40px"; // Adjust size
+
         });
       }
     </script>
