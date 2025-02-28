@@ -32,11 +32,7 @@
     position: { lat: club.lat, lng: club.lng },
     map: map,
     title: club.name, // This will show the club's name as a tooltip
-    icon: {
-      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Red_circle.svg/1200px-Red_circle.svg.png",
-      // Dynamically adjust the icon size using the player count
-      scaledSize: new google.maps.Size(40 + club.players / 10, 40 + club.players / 10)
-    }
+    
   });
 }
     </script>
