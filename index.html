@@ -16,35 +16,35 @@
 
     <script>
       function initMap() {
-        // Define your club data
-        var club = {
-          name: "Cerdanyola Valles, F.C.",
-          players: 858,
-          lat: 41.492119937849964,
-          lng: 2.1276293504646615
-        };
+  var club = {
+    name: "Cerdanyola Valles, F.C.",
+    players: 858,
+    lat: 41.492119937849964,
+    lng: 2.1276293504646615
+  };
 
-        // Center the map on the club's location
-       var map = new google.maps.Map(document.getElementById("map"), {
+  var map = new google.maps.Map(document.getElementById("map"), {
     zoom: 7,
     center: { lat: club.lat, lng: club.lng },
-    mapId: "6d21538ba521f729"  // ✅ This is your new Map ID
-        });
+    mapId: "6d21538ba521f729"
+  });
 
-       // Create an Advanced Marker
+  // ✅ FIXED: Properly creating the custom marker element
+  const customIcon = document.createElement("img");
+  customIcon.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Red_circle.svg/1200px-Red_circle.svg.png"; // Replace with your custom icon URL
+  customIcon.style.width = "40px";  
+  customIcon.style.height = "40px"; 
+
+  // ✅ FIXED: Assigning the custom element correctly
   const marker = new google.maps.marker.AdvancedMarkerElement({
-  map: map,
-  position: { lat: club.lat, lng: club.lng },
-  title: club.name,
-  content: document.createElement("img")
-});
+    map: map,
+    position: { lat: club.lat, lng: club.lng },
+    title: club.name,
+    content: customIcon // This was missing before
+  });
+}
 
-marker.content.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Red_circle.svg/1200px-Red_circle.svg.png"; // Replace with your icon URL
-marker.content.style.width = "40px";  // Adjust size
-marker.content.style.height = "40px"; // Adjust size
 
-        });
-      }
     </script>
 
     <!-- Ensure this script is loaded last -->
