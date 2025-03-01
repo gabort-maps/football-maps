@@ -1,102 +1,148 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Clubs Map</title>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=marker">
+    </script>
     <style>
-      /* Ensure the map takes up the full viewport */
-      #map {
-        height: 100vh;
-        width: 100%;
-      }
+        #map {
+            height: 80vh;
+            width: 100%;
+        }
+        #filter-container {
+            text-align: center;
+            margin: 10px;
+        }
+        select {
+            font-size: 16px;
+            padding: 5px;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
+
+    <!-- 🔹 FILTER DROPDOWN: PLACE THIS ABOVE THE MAP -->
+    <div id="filter-container">
+        <label for="filter">Filter by Club Size:</label>
+        <select id="filter" onchange="filterMarkers()">
+            <option value="all">Show All</option>
+            <option value="very-small">Very Small Clubs (&lt;150 players)</option>
+            <option value="small">Small Clubs (150-299 players)</option>
+            <option value="medium">Medium Clubs (300-499 players)</option>
+            <option value="large">Large Clubs (500-699 players)</option>
+            <option value="very-large">Very Large Clubs (700+ players)</option>
+        </select>
+    </div>
+
+    <!-- 🔹 MAP CONTAINER -->
     <div id="map"></div>
 
+    <!-- 🔹 JAVASCRIPT FOR MAP AND FILTERING -->
     <script>
-function initMap() {
-    var map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 11,  // Adjusted zoom level
-        center: { lat: 41.5, lng: 2.1 },  
-        mapId: "6d21538ba521f729"
-    });
+    let markers = [];
 
-    // Load the CSV file from GitHub
-    fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
-        .then(response => response.text())
-        .then(data => {
-            const rows = data.split("\n").slice(1); // Remove header row
-            rows.forEach(row => {
-                const columns = row.split(",");
-                if (columns.length >= 4) { // Ensure it's a valid row
-                    const name = columns[0].trim();
-                    const lat = parseFloat(columns[1]);
-                    const lng = parseFloat(columns[2]);
-                    const players = parseInt(columns[3]);
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 9,  
+            center: { lat: 41.5, lng: 2.1 },  
+            mapId: "6d21538ba521f729"
+        });
 
-                    // Determine bubble size based on player count
-                    const markerSize = Math.min(80, 30 + players / 20); // Max size: 80px, Min: 30px
+        // Load the CSV file from GitHub
+        fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
+            .then(response => response.text())
+            .then(data => {
+                const rows = data.split("\n").slice(1); // Remove header row
+                rows.forEach(row => {
+                    const columns = row.split(",");
+                    if (columns.length >= 4) { 
+                        const name = columns[0].trim();
+                        const lat = parseFloat(columns[1]);
+                        const lng = parseFloat(columns[2]);
+                        const players = parseInt(columns[3]);
 
-                    // Assign a color based on player count category
-                    let bubbleColor = "green"; // Default: Very Small Clubs (<100)
-                    if (players >= 100 && players < 200) {
-                        bubbleColor = "blue"; // Small Clubs (100-199)
-                    } else if (players >= 200 && players < 400) {
-                        bubbleColor = "purple"; // Medium Clubs (200-399)
-                    } else if (players >= 400 && players < 500) {
-                        bubbleColor = "orange"; // Large Clubs (400-499)
-                    } else if (players >= 500) {
-                        bubbleColor = "red"; // Very Large Clubs (700+)
+                        // Determine bubble size
+                        const markerSize = Math.min(80, 30 + players / 20);
+
+                        // Assign a color based on player count category
+                        let bubbleColor = "green";
+                        let category = "very-small";
+                        if (players >= 150 && players < 300) {
+                            bubbleColor = "blue";
+                            category = "small";
+                        } else if (players >= 300 && players < 500) {
+                            bubbleColor = "purple";
+                            category = "medium";
+                        } else if (players >= 500 && players < 700) {
+                            bubbleColor = "orange";
+                            category = "large";
+                        } else if (players >= 700) {
+                            bubbleColor = "red";
+                            category = "very-large";
+                        }
+
+                        // Create the bubble
+                        const customBubble = document.createElement("div");
+                        customBubble.style.width = markerSize + "px";
+                        customBubble.style.height = markerSize + "px";
+                        customBubble.style.borderRadius = "50%";
+                        customBubble.style.backgroundColor = bubbleColor;
+                        customBubble.style.display = "flex";
+                        customBubble.style.justifyContent = "center";
+                        customBubble.style.alignItems = "center";
+                        customBubble.style.color = "white";
+                        customBubble.style.fontWeight = "bold";
+                        customBubble.style.border = "2px solid white";
+                        customBubble.style.cursor = "pointer";
+                        customBubble.innerText = players;
+
+                        // Create Info Window
+                        const infoWindow = new google.maps.InfoWindow({
+                            content: `<div style="text-align:center;">
+                                        <strong>${name}</strong><br>
+                                        Players: ${players}
+                                      </div>`
+                        });
+
+                        // Add marker to the map
+                        const marker = new google.maps.marker.AdvancedMarkerElement({
+                            map: map,
+                            position: { lat: lat, lng: lng },
+                            title: name,
+                            content: customBubble
+                        });
+
+                        // Store the marker with category for filtering
+                        marker.category = category;
+                        markers.push(marker);
+
+                        // Make the bubble clickable to show the Info Window
+                        customBubble.addEventListener("click", () => {
+                            infoWindow.open(map, marker);
+                        });
                     }
+                });
+            })
+            .catch(error => console.error("Error loading CSV:", error));
+    }
 
-                    // Create a styled div instead of an image for the bubble
-                    const customBubble = document.createElement("div");
-                    customBubble.style.width = markerSize + "px";
-                    customBubble.style.height = markerSize + "px";
-                    customBubble.style.borderRadius = "50%"; // Makes it a circle
-                    customBubble.style.backgroundColor = bubbleColor;
-                    customBubble.style.display = "flex";
-                    customBubble.style.justifyContent = "center";
-                    customBubble.style.alignItems = "center";
-                    customBubble.style.color = "white";
-                    customBubble.style.fontWeight = "bold";
-                    customBubble.style.border = "2px solid white";
-                    customBubble.style.cursor = "pointer"; // Makes it look clickable
-                    customBubble.innerText = players; // Show player count inside the bubble
+    // Function to filter markers
+    function filterMarkers() {
+        let selectedCategory = document.getElementById("filter").value;
 
-                    // Create an Info Window for the club details
-                    const infoWindow = new google.maps.InfoWindow({
-                        content: `<div style="text-align:center;">
-                                    <strong>${name}</strong><br>
-                                    Players: ${players}
-                                  </div>`
-                    });
-
-                    // Add marker to the map
-                    const marker = new google.maps.marker.AdvancedMarkerElement({
-                        map: map,
-                        position: { lat: lat, lng: lng },
-                        title: name,
-                        content: customBubble
-                    });
-
-                    // Make the bubble clickable to show the Info Window
-                    customBubble.addEventListener("click", () => {
-                        infoWindow.open(map, marker);
-                    });
-                }
-            });
-        })
-        .catch(error => console.error("Error loading CSV:", error));
-}
-
-
+        markers.forEach(marker => {
+            if (selectedCategory === "all" || marker.category === selectedCategory) {
+                marker.map = map; // Show the marker
+            } else {
+                marker.map = null; // Hide the marker
+            }
+        });
+    }
     </script>
 
-    <!-- Ensure this script is loaded last -->
-    <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXOfD-urA6wwow_1mz0O-bSJ9PjwXylhQ&callback=initMap&libraries=marker">
-    </script>
-  </body>
+</body>
 </html>
+
