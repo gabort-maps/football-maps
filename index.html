@@ -25,14 +25,14 @@
     <!-- 🔹 FILTER DROPDOWN -->
     <div id="filter-container">
         <label for="filter">Filter:</label>
-       <select id="filter" onchange="filterMarkers()">
-    <option value="all">Show All Clubs</option>
-    <option value="super">Show Only Super Bubbles</option>
-    <option value="large">Show Only Large Clubs (500+ Players)</option>
-    <option value="medium">Show Only Medium Clubs (300-500 Players)</option>
-    <option value="small">Show Only Small Clubs (100-300 Players)</option>
-    <option value="very-small">Show Only Very Small Clubs (Under 100 Players)</option>
+       <select id="filter" multiple onchange="filterMarkers()">
+    <option value="super">Show Super Bubbles</option>
+    <option value="large">Show Large Clubs (500+ Players)</option>
+    <option value="medium">Show Medium Clubs (300-500 Players)</option>
+    <option value="small">Show Small Clubs (100-300 Players)</option>
+    <option value="very-small">Show Very Small Clubs (Under 100 Players)</option>
 </select>
+
 
     </div>
 
@@ -235,30 +235,26 @@ clubBubble.style.backgroundColor = color;
         }
 
         // ✅ Filtering function
-      function filterMarkers() {
-    let selectedFilter = document.getElementById("filter").value;
+    function filterMarkers() {
+    let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
 
     markers.forEach(marker => {
-        let players = parseInt(marker.content.innerText); // Extract player count from marker
-        if (selectedFilter === "all") {
-            marker.map = window.map;
-        } else if (selectedFilter === "large" && players > 500) {
-            marker.map = window.map;
-        } else if (selectedFilter === "medium" && players > 300 && players <= 500) {
-            marker.map = window.map;
-        } else if (selectedFilter === "small" && players > 100 && players <= 300) {
-            marker.map = window.map;
-        } else if (selectedFilter === "very-small" && players <= 100) {
-            marker.map = window.map;
-        } else {
-            marker.map = null;
-        }
+        let players = parseInt(marker.content.innerText);
+        let showMarker = false;
+
+        if (selectedOptions.includes("large") && players > 500) showMarker = true;
+        if (selectedOptions.includes("medium") && players > 300 && players <= 500) showMarker = true;
+        if (selectedOptions.includes("small") && players > 100 && players <= 300) showMarker = true;
+        if (selectedOptions.includes("very-small") && players <= 100) showMarker = true;
+
+        marker.map = showMarker ? window.map : null;
     });
 
     superBubbles.forEach(marker => {
-        marker.map = (selectedFilter === "super" || selectedFilter === "all") ? window.map : null;
+        marker.map = selectedOptions.includes("super") ? window.map : null;
     });
 }
+
 
     </script>
 
