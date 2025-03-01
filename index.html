@@ -43,11 +43,11 @@
         window.initMap = function() {
             console.log("Google Maps API loaded successfully and `initMap` is running!");
 
-            var map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 9,  
-                center: { lat: 41.5, lng: 2.1 },  
-                mapId: "6d21538ba521f729"
-            });
+           window.map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 9,  
+    center: { lat: 41.5, lng: 2.1 },  
+    mapId: "6d21538ba521f729"
+});
 
             if (!map) {
                 console.error("Map failed to initialize!");
@@ -94,34 +94,49 @@ fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.cs
 
         // ✅ Now, create the bubbles
         Object.values(groupedLocations).forEach(group => {
-            let clubNames = group.clubs.map(c => `${c.name}: ${c.players} players`).join("<br>");
+           // ✅ Create Individual Club Markers (slightly offset so they don’t overlap)
+group.clubs.forEach((club, index) => {
+    let clubLat = group.lat + (index * 0.0002); // Small shift to separate markers
+    let clubLng = group.lng + (index * 0.0002);
 
-            let superBubbleSize = Math.min(100, 40 + group.totalPlayers / 30);
-            let superBubble = document.createElement("div");
-            superBubble.style.width = superBubbleSize + "px";
-            superBubble.style.height = superBubbleSize + "px";
-            superBubble.style.borderRadius = "50%";
-            superBubble.style.backgroundColor = "#D3D3D3";
-            superBubble.style.display = "flex";
-            superBubble.style.justifyContent = "center";
-            superBubble.style.alignItems = "center";
-            superBubble.style.color = "black";
-            superBubble.style.fontWeight = "bold";
-            superBubble.style.border = "2px solid white";
-            superBubble.innerText = group.totalPlayers;
+    let clubBubbleSize = Math.min(80, 30 + club.players / 20);
+    let clubBubble = document.createElement("div");
+    clubBubble.style.width = clubBubbleSize + "px";
+    clubBubble.style.height = clubBubbleSize + "px";
+    clubBubble.style.borderRadius = "50%";
+    clubBubble.style.backgroundColor = "blue"; // Club markers in blue
+    clubBubble.style.display = "flex";
+    clubBubble.style.justifyContent = "center";
+    clubBubble.style.alignItems = "center";
+    clubBubble.style.color = "white";
+    clubBubble.style.fontWeight = "bold";
+    clubBubble.style.border = "2px solid white";
+    clubBubble.innerText = club.players;
 
-           let superMarker = new google.maps.Marker({
-    position: { lat: group.lat, lng: group.lng },
-    map: map,
-    title: "Super Bubble",
-    icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: Math.min(10 + group.totalPlayers / 50, 40),
-        fillColor: "#D3D3D3",
-        fillOpacity: 0.7,
-        strokeWeight: 1
-    }
+    let clubMarker = new google.maps.marker.AdvancedMarkerElement({
+        position: { lat: clubLat, lng: clubLng },
+        title: club.name,
+        content: clubBubble
+    });
+
+    clubMarker.map = window.map; // ✅ Ensure marker is assigned to map
+
+    let clubInfoWindow = new google.maps.InfoWindow({
+        content: `<div style="text-align:center;">
+                    <strong>${club.name}</strong><br>Players: ${club.players}
+                  </div>`
+    });
+
+    clubBubble.addEventListener("click", () => {
+        clubInfoWindow.open(map, clubMarker);
+    });
+
+    clubMarker.category = "club";
+    markers.push(clubMarker);
 });
+
+superMarker.map = window.map; // ✅ Ensure marker is assigned to map
+
 
             let infoWindow = new google.maps.InfoWindow({
                 content: `<div style="text-align:center;">
