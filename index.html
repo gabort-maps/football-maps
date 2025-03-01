@@ -110,12 +110,18 @@ fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.cs
             superBubble.style.border = "2px solid white";
             superBubble.innerText = group.totalPlayers;
 
-            let superMarker = new google.maps.marker.AdvancedMarkerElement({
-                map: map,
-                position: { lat: group.lat, lng: group.lng },
-                title: "Super Bubble",
-                content: superBubble
-            });
+           let superMarker = new google.maps.Marker({
+    position: { lat: group.lat, lng: group.lng },
+    map: map,
+    title: "Super Bubble",
+    icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: Math.min(10 + group.totalPlayers / 50, 40),
+        fillColor: "#D3D3D3",
+        fillOpacity: 0.7,
+        strokeWeight: 1
+    }
+});
 
             let infoWindow = new google.maps.InfoWindow({
                 content: `<div style="text-align:center;">
