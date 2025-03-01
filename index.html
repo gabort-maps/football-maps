@@ -86,13 +86,29 @@
                                 return; // Skip invalid rows
                             }
 
-                            let key = `${lat},${lng}`;
-                            if (!groupedLocations[key]) {
-                                groupedLocations[key] = { lat, lng, totalPlayers: 0, clubs: [] };
-                            }
+                            // ✅ Try to find an existing group within 250 meters
+let foundGroup = null;
+for (let existingKey in groupedLocations) {
+    let existingGroup = groupedLocations[existingKey];
+    let distance = haversineDistance(lat, lng, existingGroup.lat, existingGroup.lng);
 
-                            groupedLocations[key].clubs.push({ name, players });
-                            groupedLocations[key].totalPlayers += players;
+    if (distance <= 0.25) { // ✅ If within 250m, group them together
+        foundGroup = existingGroup;
+        break;
+    }
+}
+
+// ✅ If a group is found, add the club to it
+if (foundGroup) {
+    foundGroup.clubs.push({ name, players });
+    foundGroup.totalPlayers += players;
+} else {
+    // ✅ Otherwise, create a new group
+    groupedLocations[`${lat},${lng}`] = { 
+        lat, lng, totalPlayers: players, clubs: [{ name, players }]
+    };
+}
+
                         }
                     });
 
