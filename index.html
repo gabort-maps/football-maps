@@ -17,7 +17,7 @@
     <script>
 function initMap() {
     var map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 9,  // Adjusted zoom level
+        zoom: 10,  // Adjusted zoom level
         center: { lat: 41.5, lng: 2.1 },  
         mapId: "6d21538ba521f729"
     });
@@ -39,14 +39,14 @@ function initMap() {
                     const markerSize = Math.min(80, 30 + players / 20); // Max size: 80px, Min: 30px
 
                     // Assign a color based on player count category
-                    let bubbleColor = "green"; // Default: Very Small Clubs (<150)
-                    if (players >= 150 && players < 300) {
-                        bubbleColor = "blue"; // Small Clubs (150-299)
-                    } else if (players >= 300 && players < 500) {
-                        bubbleColor = "purple"; // Medium Clubs (300-499)
-                    } else if (players >= 500 && players < 700) {
-                        bubbleColor = "orange"; // Large Clubs (500-699)
-                    } else if (players >= 700) {
+                    let bubbleColor = "green"; // Default: Very Small Clubs (<100)
+                    if (players >= 100 && players < 200) {
+                        bubbleColor = "blue"; // Small Clubs (100-199)
+                    } else if (players >= 200 && players < 400) {
+                        bubbleColor = "purple"; // Medium Clubs (200-399)
+                    } else if (players >= 400 && players < 500) {
+                        bubbleColor = "orange"; // Large Clubs (400-499)
+                    } else if (players >= 500) {
                         bubbleColor = "red"; // Very Large Clubs (700+)
                     }
 
