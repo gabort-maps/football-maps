@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Clubs Map</title>
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXOfD-urA6wwow_1mz0O-bSJ9PjwXylhQ&callback=initMap&libraries=marker">
+    <script async defer 
+        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=marker">
     </script>
     <style>
         #map {
@@ -20,131 +20,187 @@
             font-size: 16px;
             padding: 5px;
         }
-        .hidden {
-    display: none;
-}
-
     </style>
 </head>
 <body>
 
-    <!-- 🔹 FILTER DROPDOWN: PLACE THIS ABOVE THE MAP -->
+    <!-- 🔹 PLACE FILTER DROPDOWN HERE -->
     <div id="filter-container">
-        <label for="filter">Filter by Club Size:</label>
+        <label for="filter">Filter:</label>
         <select id="filter" onchange="filterMarkers()">
-            <option value="all">Show All</option>
-            <option value="very-small">Very Small Clubs (&lt;150 players)</option>
-            <option value="small">Small Clubs (150-299 players)</option>
-            <option value="medium">Medium Clubs (300-499 players)</option>
-            <option value="large">Large Clubs (500-699 players)</option>
-            <option value="very-large">Very Large Clubs (700+ players)</option>
+            <option value="all">Show All Clubs</option>
+            <option value="super">Show Only Super Bubbles</option>
         </select>
     </div>
 
     <!-- 🔹 MAP CONTAINER -->
     <div id="map"></div>
 
-    <!-- 🔹 JAVASCRIPT FOR MAP AND FILTERING -->
+    <!-- 🔹 JAVASCRIPT FOR MAP, SUPER BUBBLES, AND FILTERING -->
     <script>
-    let markers = [];
+        // (Insert the JavaScript code I provided earlier here)
+    </script>
 
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 11,  
-            center: { lat: 41.5, lng: 2.1 },  
-            mapId: "6d21538ba521f729"
-        });
+</body>
+</html>
 
-        // Load the CSV file from GitHub
-        fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
-            .then(response => response.text())
-            .then(data => {
-                const rows = data.split("\n").slice(1); // Remove header row
-                rows.forEach(row => {
-                    const columns = row.split(",");
-                    if (columns.length >= 4) { 
-                        const name = columns[0].trim();
-                        const lat = parseFloat(columns[1]);
-                        const lng = parseFloat(columns[2]);
-                        const players = parseInt(columns[3]);
+let markers = []; // Stores all club markers
+let superBubbles = []; // Stores all super bubbles
 
-                        // Determine bubble size
-                        const markerSize = Math.min(80, 30 + players / 20);
+function initMap() {
+    var map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 9,  
+        center: { lat: 41.5, lng: 2.1 },  
+        mapId: "6d21538ba521f729"
+    });
 
-                        // Assign a color based on player count category
-                        let bubbleColor = "green";
-                        let category = "very-small";
-                        if (players >= 150 && players < 300) {
-                            bubbleColor = "blue";
-                            category = "small";
-                        } else if (players >= 300 && players < 500) {
-                            bubbleColor = "purple";
-                            category = "medium";
-                        } else if (players >= 500 && players < 700) {
-                            bubbleColor = "orange";
-                            category = "large";
-                        } else if (players >= 700) {
-                            bubbleColor = "red";
-                            category = "very-large";
+    fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
+        .then(response => response.text())
+        .then(data => {
+            const rows = data.split("\n").slice(1); // Remove header
+            let groupedLocations = {}; // Store grouped clubs by location
+
+            rows.forEach(row => {
+                const columns = row.split(",");
+                if (columns.length >= 4) { 
+                    const name = columns[0].trim();
+                    const lat = parseFloat(columns[1]);
+                    const lng = parseFloat(columns[2]);
+                    const players = parseInt(columns[3]);
+
+                    // Check if this club should be grouped with another (within 250m)
+                    let foundGroup = null;
+                    for (let key in groupedLocations) {
+                        let group = groupedLocations[key];
+                        let dist = haversineDistance(lat, lng, group.lat, group.lng);
+
+                        if (dist <= 0.25) { // 0.25km = 250m
+                            foundGroup = group;
+                            break;
                         }
-
-                        // Create the bubble
-                        const customBubble = document.createElement("div");
-                        customBubble.style.width = markerSize + "px";
-                        customBubble.style.height = markerSize + "px";
-                        customBubble.style.borderRadius = "50%";
-                        customBubble.style.backgroundColor = bubbleColor;
-                        customBubble.style.display = "flex";
-                        customBubble.style.justifyContent = "center";
-                        customBubble.style.alignItems = "center";
-                        customBubble.style.color = "white";
-                        customBubble.style.fontWeight = "bold";
-                        customBubble.style.border = "2px solid white";
-                        customBubble.style.cursor = "pointer";
-                        customBubble.innerText = players;
-
-                        // Create Info Window
-                        const infoWindow = new google.maps.InfoWindow({
-                            content: `<div style="text-align:center;">
-                                        <strong>${name}</strong><br>
-                                        Players: ${players}
-                                      </div>`
-                        });
-
-                        // Add marker to the map
-                        const marker = new google.maps.marker.AdvancedMarkerElement({
-                            map: map,
-                            position: { lat: lat, lng: lng },
-                            title: name,
-                            content: customBubble
-                        });
-
-                        // Store the marker with category for filtering
-                        marker.category = category;
-                        markers.push(marker);
-
-                        // Make the bubble clickable to show the Info Window
-                        customBubble.addEventListener("click", () => {
-                            infoWindow.open(map, marker);
-                        });
                     }
-                });
-            })
-            .catch(error => console.error("Error loading CSV:", error));
-    }
 
-    // Function to filter markers
-   function filterMarkers() {
-    let selectedCategory = document.getElementById("filter").value;
+                    if (foundGroup) {
+                        foundGroup.clubs.push({ name, players });
+                        foundGroup.totalPlayers += players;
+                    } else {
+                        groupedLocations[`${lat},${lng}`] = { 
+                            lat, lng, totalPlayers: players, clubs: [{ name, players }]
+                        };
+                    }
+                }
+            });
+
+            // Create markers and super bubbles
+            for (let key in groupedLocations) {
+                let group = groupedLocations[key];
+                let clubNames = group.clubs.map(c => `${c.name}: ${c.players} players`).join("<br>");
+
+                // Create Super Bubble
+                let superBubbleSize = Math.min(100, 40 + group.totalPlayers / 30); // Max 100px
+                let superBubble = document.createElement("div");
+                superBubble.style.width = superBubbleSize + "px";
+                superBubble.style.height = superBubbleSize + "px";
+                superBubble.style.borderRadius = "50%";
+                superBubble.style.backgroundColor = "#D3D3D3"; // Light gray
+                superBubble.style.display = "flex";
+                superBubble.style.justifyContent = "center";
+                superBubble.style.alignItems = "center";
+                superBubble.style.color = "black";
+                superBubble.style.fontWeight = "bold";
+                superBubble.style.border = "2px solid white";
+                superBubble.innerText = group.totalPlayers;
+
+                let superMarker = new google.maps.marker.AdvancedMarkerElement({
+                    map: map,
+                    position: { lat: group.lat, lng: group.lng },
+                    title: "Super Bubble",
+                    content: superBubble
+                });
+
+                let infoWindow = new google.maps.InfoWindow({
+                    content: `<div style="text-align:center;">
+                                <strong>Football Field</strong><br>${clubNames}
+                              </div>`
+                });
+
+                superBubble.addEventListener("click", () => {
+                    infoWindow.open(map, superMarker);
+                });
+
+                superMarker.category = "super";
+                superBubbles.push(superMarker);
+
+                // Create Individual Club Markers (slightly offset)
+                let shiftFactor = 0.0002; // Small shift to separate clubs visually
+                group.clubs.forEach((club, index) => {
+                    let clubLat = group.lat + (index * shiftFactor);
+                    let clubLng = group.lng + (index * shiftFactor);
+
+                    let clubBubbleSize = Math.min(80, 30 + club.players / 20);
+                    let clubBubble = document.createElement("div");
+                    clubBubble.style.width = clubBubbleSize + "px";
+                    clubBubble.style.height = clubBubbleSize + "px";
+                    clubBubble.style.borderRadius = "50%";
+                    clubBubble.style.backgroundColor = "blue";
+                    clubBubble.style.display = "flex";
+                    clubBubble.style.justifyContent = "center";
+                    clubBubble.style.alignItems = "center";
+                    clubBubble.style.color = "white";
+                    clubBubble.style.fontWeight = "bold";
+                    clubBubble.style.border = "2px solid white";
+                    clubBubble.innerText = club.players;
+
+                    let clubMarker = new google.maps.marker.AdvancedMarkerElement({
+                        map: map,
+                        position: { lat: clubLat, lng: clubLng },
+                        title: club.name,
+                        content: clubBubble
+                    });
+
+                    let clubInfoWindow = new google.maps.InfoWindow({
+                        content: `<div style="text-align:center;">
+                                    <strong>${club.name}</strong><br>Players: ${club.players}
+                                  </div>`
+                    });
+
+                    clubBubble.addEventListener("click", () => {
+                        clubInfoWindow.open(map, clubMarker);
+                    });
+
+                    clubMarker.category = "club";
+                    markers.push(clubMarker);
+                });
+            }
+        })
+        .catch(error => console.error("Error loading CSV:", error));
+}
+
+// Haversine formula to calculate distance between two lat/lng points
+function haversineDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of Earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
+}
+
+// Filtering function
+function filterMarkers() {
+    let selectedFilter = document.getElementById("filter").value;
 
     markers.forEach(marker => {
-        if (selectedCategory === "all" || marker.category === selectedCategory) {
-            marker.classList.remove("hidden"); // ✅ Show the marker
-        } else {
-            marker.classList.add("hidden"); // ✅ Hide the marker
-        }
+        marker.map = (selectedFilter === "all") ? map : null;
+    });
+
+    superBubbles.forEach(marker => {
+        marker.map = (selectedFilter === "super" || selectedFilter === "all") ? map : null;
     });
 }
+
     </script>
 
 </body>
