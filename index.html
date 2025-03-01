@@ -15,10 +15,10 @@
     <div id="map"></div>
 
     <script>
- function initMap() {
+function initMap() {
     var map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 10,
-        center: { lat: 41.5, lng: 2.1 },  // Adjust this to center around your data
+        zoom: 9,  // Adjusted zoom level
+        center: { lat: 41.5, lng: 2.1 },  
         mapId: "6d21538ba521f729"
     });
 
@@ -26,7 +26,7 @@
     fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
         .then(response => response.text())
         .then(data => {
-            const rows = data.split("\n").slice(1); // Remove header
+            const rows = data.split("\n").slice(1); // Remove header row
             rows.forEach(row => {
                 const columns = row.split(",");
                 if (columns.length >= 4) { // Ensure it's a valid row
@@ -40,28 +40,38 @@
 
                     // Assign a color based on player count category
                     let bubbleColor = "green"; // Default: Very Small Clubs (<150)
-                    if (players >= 150 && players < 299) {
+                    if (players >= 150 && players < 300) {
                         bubbleColor = "blue"; // Small Clubs (150-299)
                     } else if (players >= 300 && players < 500) {
                         bubbleColor = "purple"; // Medium Clubs (300-499)
-                    } else if (players >= 500 && players < 600) {
+                    } else if (players >= 500 && players < 700) {
                         bubbleColor = "orange"; // Large Clubs (500-699)
-                    } else if (players >= 600) {
+                    } else if (players >= 700) {
                         bubbleColor = "red"; // Very Large Clubs (700+)
                     }
 
-                    // Create a colored bubble marker
+                    // Create a styled div instead of an image for the bubble
                     const customBubble = document.createElement("div");
                     customBubble.style.width = markerSize + "px";
                     customBubble.style.height = markerSize + "px";
-                    customBubble.style.borderRadius = "50%";
+                    customBubble.style.borderRadius = "50%"; // Makes it a circle
                     customBubble.style.backgroundColor = bubbleColor;
                     customBubble.style.display = "flex";
                     customBubble.style.justifyContent = "center";
                     customBubble.style.alignItems = "center";
                     customBubble.style.color = "white";
                     customBubble.style.fontWeight = "bold";
-                    customBubble.innerText = players; // Display player count inside the bubble
+                    customBubble.style.border = "2px solid white";
+                    customBubble.style.cursor = "pointer"; // Makes it look clickable
+                    customBubble.innerText = players; // Show player count inside the bubble
+
+                    // Create an Info Window for the club details
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: `<div style="text-align:center;">
+                                    <strong>${name}</strong><br>
+                                    Players: ${players}
+                                  </div>`
+                    });
 
                     // Add marker to the map
                     const marker = new google.maps.marker.AdvancedMarkerElement({
@@ -70,11 +80,17 @@
                         title: name,
                         content: customBubble
                     });
+
+                    // Make the bubble clickable to show the Info Window
+                    customBubble.addEventListener("click", () => {
+                        infoWindow.open(map, marker);
+                    });
                 }
             });
         })
         .catch(error => console.error("Error loading CSV:", error));
 }
+
 
     </script>
 
