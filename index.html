@@ -130,17 +130,17 @@
     }
 
     // Function to filter markers
-    function filterMarkers() {
-        let selectedCategory = document.getElementById("filter").value;
+   function filterMarkers() {
+    let selectedCategory = document.getElementById("filter").value;
 
-        markers.forEach(marker => {
-            if (selectedCategory === "all" || marker.category === selectedCategory) {
-                marker.map = map; // Show the marker
-            } else {
-                marker.map = null; // Hide the marker
-            }
-        });
-    }
+    markers.forEach(marker => {
+        if (selectedCategory === "all" || marker.category === selectedCategory) {
+            marker.map = map; // Show the marker
+        } else {
+            marker.map = null; // Hide the marker
+        }
+    });
+}
     </script>
 
 </body>
