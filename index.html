@@ -25,10 +25,15 @@
     <!-- 🔹 FILTER DROPDOWN -->
     <div id="filter-container">
         <label for="filter">Filter:</label>
-        <select id="filter" onchange="filterMarkers()">
-            <option value="all">Show All Clubs</option>
-            <option value="super">Show Only Super Bubbles</option>
-        </select>
+       <select id="filter" onchange="filterMarkers()">
+    <option value="all">Show All Clubs</option>
+    <option value="super">Show Only Super Bubbles</option>
+    <option value="large">Show Only Large Clubs (500+ Players)</option>
+    <option value="medium">Show Only Medium Clubs (300-500 Players)</option>
+    <option value="small">Show Only Small Clubs (100-300 Players)</option>
+    <option value="very-small">Show Only Very Small Clubs (Under 100 Players)</option>
+</select>
+
     </div>
 
     <!-- 🔹 MAP CONTAINER -->
@@ -152,7 +157,21 @@
                 clubBubble.style.width = clubBubbleSize + "px";
                 clubBubble.style.height = clubBubbleSize + "px";
                 clubBubble.style.borderRadius = "50%";
-                clubBubble.style.backgroundColor = "blue";
+                // ✅ Assign different colors based on player count
+let color = "blue"; // Default
+
+if (club.players > 500) {
+    color = "red"; // Large clubs (500+ players)
+} else if (club.players > 300) {
+    color = "purple"; // Medium clubs (300-500 players)
+} else if (club.players > 100) {
+    color = "green"; // Small clubs (100-300 players)
+} else {
+    color = "yellow"; // Very small clubs (<100 players)
+}
+
+clubBubble.style.backgroundColor = color;
+
                 clubBubble.style.display = "flex";
                 clubBubble.style.justifyContent = "center";
                 clubBubble.style.alignItems = "center";
@@ -184,17 +203,31 @@
         }
 
         // ✅ Filtering function
-        function filterMarkers() {
-            let selectedFilter = document.getElementById("filter").value;
+      function filterMarkers() {
+    let selectedFilter = document.getElementById("filter").value;
 
-            markers.forEach(marker => {
-                marker.map = (selectedFilter === "all") ? window.map : null;
-            });
-
-            superBubbles.forEach(marker => {
-                marker.map = (selectedFilter === "super" || selectedFilter === "all") ? window.map : null;
-            });
+    markers.forEach(marker => {
+        let players = parseInt(marker.content.innerText); // Extract player count from marker
+        if (selectedFilter === "all") {
+            marker.map = window.map;
+        } else if (selectedFilter === "large" && players > 500) {
+            marker.map = window.map;
+        } else if (selectedFilter === "medium" && players > 300 && players <= 500) {
+            marker.map = window.map;
+        } else if (selectedFilter === "small" && players > 100 && players <= 300) {
+            marker.map = window.map;
+        } else if (selectedFilter === "very-small" && players <= 100) {
+            marker.map = window.map;
+        } else {
+            marker.map = null;
         }
+    });
+
+    superBubbles.forEach(marker => {
+        marker.map = (selectedFilter === "super" || selectedFilter === "all") ? window.map : null;
+    });
+}
+
     </script>
 
     <!-- 🔹 GOOGLE MAPS API -->
