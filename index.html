@@ -57,45 +57,82 @@
         // ✅ Log to confirm script is running
         console.log("Custom script loaded successfully.");
 
-        // Fetch Data from CSV
-        fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
-            .then(response => response.text())
-            .then(data => {
-                const rows = data.split("\n").slice(1); // Remove header
-                let groupedLocations = {}; // Store grouped clubs by location
+       // ✅ Fetch Data from CSV
+fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
+    .then(response => response.text())
+    .then(data => {
+        console.log("CSV File Loaded Successfully!"); // ✅ Debugging message
+        console.log(data); // ✅ Log the CSV content to check if it's correct
+        
+        const rows = data.split("\n").slice(1); // Remove header
+        let groupedLocations = {}; // Store grouped clubs by location
 
-                rows.forEach(row => {
-                    const columns = row.split(",");
-                    if (columns.length >= 4) {
-                        const name = columns[0].trim();
-                        const lat = parseFloat(columns[1]);
-                        const lng = parseFloat(columns[2]);
-                        const players = parseInt(columns[3]);
+        rows.forEach(row => {
+            const columns = row.split(",");
+            if (columns.length >= 4) {
+                const name = columns[0].trim();
+                const lat = parseFloat(columns[1]);
+                const lng = parseFloat(columns[2]);
+                const players = parseInt(columns[3]);
 
-                        // Check if this club should be grouped with another (within 250m)
-                        let foundGroup = null;
-                        for (let key in groupedLocations) {
-                            let group = groupedLocations[key];
-                            let dist = haversineDistance(lat, lng, group.lat, group.lng);
+                if (isNaN(lat) || isNaN(lng) || isNaN(players)) {
+                    console.warn(`Skipping invalid row: ${row}`);
+                    return; // Skip invalid rows
+                }
 
-                            if (dist <= 0.25) { // 0.25km = 250m
-                                foundGroup = group;
-                                break;
-                            }
-                        }
+                let key = `${lat},${lng}`;
+                if (!groupedLocations[key]) {
+                    groupedLocations[key] = { lat, lng, totalPlayers: 0, clubs: [] };
+                }
 
-                        if (foundGroup) {
-                            foundGroup.clubs.push({ name, players });
-                            foundGroup.totalPlayers += players;
-                        } else {
-                            groupedLocations[`${lat},${lng}`] = { 
-                                lat, lng, totalPlayers: players, clubs: [{ name, players }]
-                            };
-                        }
-                    }
-                });
-            })
-            .catch(error => console.error("Error loading CSV:", error));
+                groupedLocations[key].clubs.push({ name, players });
+                groupedLocations[key].totalPlayers += players;
+            }
+        });
+
+        console.log("Grouped Locations:", groupedLocations); // ✅ Debugging check
+
+        // ✅ Now, create the bubbles
+        Object.values(groupedLocations).forEach(group => {
+            let clubNames = group.clubs.map(c => `${c.name}: ${c.players} players`).join("<br>");
+
+            let superBubbleSize = Math.min(100, 40 + group.totalPlayers / 30);
+            let superBubble = document.createElement("div");
+            superBubble.style.width = superBubbleSize + "px";
+            superBubble.style.height = superBubbleSize + "px";
+            superBubble.style.borderRadius = "50%";
+            superBubble.style.backgroundColor = "#D3D3D3";
+            superBubble.style.display = "flex";
+            superBubble.style.justifyContent = "center";
+            superBubble.style.alignItems = "center";
+            superBubble.style.color = "black";
+            superBubble.style.fontWeight = "bold";
+            superBubble.style.border = "2px solid white";
+            superBubble.innerText = group.totalPlayers;
+
+            let superMarker = new google.maps.marker.AdvancedMarkerElement({
+                map: map,
+                position: { lat: group.lat, lng: group.lng },
+                title: "Super Bubble",
+                content: superBubble
+            });
+
+            let infoWindow = new google.maps.InfoWindow({
+                content: `<div style="text-align:center;">
+                            <strong>Football Field</strong><br>${clubNames}
+                          </div>`
+            });
+
+            superBubble.addEventListener("click", () => {
+                infoWindow.open(map, superMarker);
+            });
+
+            superMarker.category = "super";
+            superBubbles.push(superMarker);
+        });
+
+    })
+    .catch(error => console.error("Error loading CSV:", error));
 
         // Haversine formula to calculate distance between two lat/lng points
         function haversineDistance(lat1, lon1, lat2, lon2) {
