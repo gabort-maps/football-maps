@@ -17,11 +17,19 @@
        select {
     font-size: 12px;  /* ✅ Smaller font for compact design */
     padding: 5px;
-    width: 220px;  /* ✅ Keeps dropdown smaller */
+    width: 280px;  /* ✅ Widen the box */
     height: auto; /* ✅ Expands when selecting multiple options */
-    max-height: 100px; /* ✅ Allows showing multiple selected options */
-    overflow-y: auto; /* ✅ Adds scrolling only when necessary */
+    max-height: 120px; /* ✅ Shows multiple selected options */
+    overflow-y: auto; /* ✅ Enables scrolling only if too many options */
 }
+
+/* ✅ Ensures each option is clearly visible */
+#filter option {
+    font-size: 12px; /* ✅ Matches the smaller font */
+    padding: 4px;
+    white-space: nowrap; /* ✅ Prevents text from wrapping */
+}
+
 
 /* ✅ Ensures each option is clearly visible */
 #filter option {
