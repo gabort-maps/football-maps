@@ -99,10 +99,13 @@
                     console.log("Grouped Locations:", groupedLocations); // ✅ Debugging check
 
                     // ✅ Now, Create Markers for Both Super Bubbles and Individual Clubs
-                    Object.values(groupedLocations).forEach(group => {
-                        createSuperBubble(group);
-                        createClubMarkers(group);
-                    });
+                   Object.values(groupedLocations).forEach(group => {
+    if (group.clubs.length > 1) { // ✅ Only create a Super Bubble if more than 1 club is at this location
+        createSuperBubble(group);
+    }
+    createClubMarkers(group); // ✅ Always create club markers
+});
+
                 })
                 .catch(error => console.error("Error loading CSV:", error));
         }
