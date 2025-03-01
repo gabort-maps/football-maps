@@ -72,12 +72,14 @@
     <div id="filter-container">
         <label for="filter">Filter:</label>
        <select id="filter" multiple onchange="filterMarkers()">
+    <option value="all">Show All Clubs</option>
     <option value="super">Show Super Bubbles</option>
     <option value="large">Show Large Clubs (500+ Players)</option>
     <option value="medium">Show Medium Clubs (300-500 Players)</option>
     <option value="small">Show Small Clubs (100-300 Players)</option>
     <option value="very-small">Show Very Small Clubs (Under 100 Players)</option>
     <option value="grouped">Show Only Clubs in Super Bubbles</option>
+       
 
 </select>
 
@@ -284,30 +286,32 @@ clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are
         }
 
         // ✅ Filtering function
-    function filterMarkers() {
+  function filterMarkers() {
     let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
 
     markers.forEach(marker => {
         let players = parseInt(marker.content.innerText);
         let showMarker = false;
 
-        if (selectedOptions.includes("large") && players > 500) showMarker = true;
-        if (selectedOptions.includes("medium") && players > 300 && players <= 500) showMarker = true;
-        if (selectedOptions.includes("small") && players > 100 && players <= 300) showMarker = true;
-        if (selectedOptions.includes("very-small") && players <= 100) showMarker = true;
-
-        // ✅ NEW: Show only clubs that are in Super Bubbles
-        if (selectedOptions.includes("grouped") && marker.inSuperBubble) {
+        // ✅ If "Show All" is selected, show everything
+        if (selectedOptions.includes("all")) {
             showMarker = true;
+        } else {
+            if (selectedOptions.includes("large") && players > 500) showMarker = true;
+            if (selectedOptions.includes("medium") && players > 300 && players <= 500) showMarker = true;
+            if (selectedOptions.includes("small") && players > 100 && players <= 300) showMarker = true;
+            if (selectedOptions.includes("very-small") && players <= 100) showMarker = true;
+            if (selectedOptions.includes("grouped") && marker.inSuperBubble) showMarker = true;
         }
 
         marker.map = showMarker ? window.map : null;
     });
 
     superBubbles.forEach(marker => {
-        marker.map = selectedOptions.includes("super") ? window.map : null;
+        marker.map = (selectedOptions.includes("super") || selectedOptions.includes("all")) ? window.map : null;
     });
 }
+
 
 
 
