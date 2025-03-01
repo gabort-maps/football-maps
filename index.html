@@ -36,107 +36,97 @@
 
     <!-- 🔹 JAVASCRIPT FOR MAP, SUPER BUBBLES, AND FILTERING -->
     <script>
-        let markers = []; // Stores all club markers
-        let superBubbles = []; // Stores all super bubbles
+        let markers = []; // Stores all individual club markers
+        let superBubbles = []; // Stores all super bubble markers
 
-        // ✅ Make sure initMap is globally accessible
+        // ✅ Initialize the Map
         window.initMap = function() {
             console.log("Google Maps API loaded successfully and `initMap` is running!");
 
-           window.map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 9,  
-    center: { lat: 41.5, lng: 2.1 },  
-    mapId: "6d21538ba521f729"
-});
+            window.map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 9,  
+                center: { lat: 41.5, lng: 2.1 },  
+                mapId: "6d21538ba521f729"
+            });
 
-            if (!map) {
+            if (!window.map) {
                 console.error("Map failed to initialize!");
             }
+
+            // ✅ Fetch the CSV Data
+            loadClubData();
         };
 
-        // ✅ Log to confirm script is running
-        console.log("Custom script loaded successfully.");
+        // ✅ Fetch Data from CSV and Add Markers
+        function loadClubData() {
+            fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
+                .then(response => response.text())
+                .then(data => {
+                    console.log("CSV File Loaded Successfully!");
+                    console.log(data); // ✅ Log the CSV content
 
-       // ✅ Fetch Data from CSV
-fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
-    .then(response => response.text())
-    .then(data => {
-        console.log("CSV File Loaded Successfully!"); // ✅ Debugging message
-        console.log(data); // ✅ Log the CSV content to check if it's correct
-        
-        const rows = data.split("\n").slice(1); // Remove header
-        let groupedLocations = {}; // Store grouped clubs by location
+                    const rows = data.split("\n").slice(1); // Remove header
+                    let groupedLocations = {}; // Store grouped clubs by location
 
-        rows.forEach(row => {
-            const columns = row.split(",");
-            if (columns.length >= 4) {
-                const name = columns[0].trim();
-                const lat = parseFloat(columns[1]);
-                const lng = parseFloat(columns[2]);
-                const players = parseInt(columns[3]);
+                    rows.forEach(row => {
+                        const columns = row.split(",");
+                        if (columns.length >= 4) {
+                            const name = columns[0].trim();
+                            const lat = parseFloat(columns[1]);
+                            const lng = parseFloat(columns[2]);
+                            const players = parseInt(columns[3]);
 
-                if (isNaN(lat) || isNaN(lng) || isNaN(players)) {
-                    console.warn(`Skipping invalid row: ${row}`);
-                    return; // Skip invalid rows
-                }
+                            if (isNaN(lat) || isNaN(lng) || isNaN(players)) {
+                                console.warn(`Skipping invalid row: ${row}`);
+                                return; // Skip invalid rows
+                            }
 
-                let key = `${lat},${lng}`;
-                if (!groupedLocations[key]) {
-                    groupedLocations[key] = { lat, lng, totalPlayers: 0, clubs: [] };
-                }
+                            let key = `${lat},${lng}`;
+                            if (!groupedLocations[key]) {
+                                groupedLocations[key] = { lat, lng, totalPlayers: 0, clubs: [] };
+                            }
 
-                groupedLocations[key].clubs.push({ name, players });
-                groupedLocations[key].totalPlayers += players;
-            }
-        });
+                            groupedLocations[key].clubs.push({ name, players });
+                            groupedLocations[key].totalPlayers += players;
+                        }
+                    });
 
-        console.log("Grouped Locations:", groupedLocations); // ✅ Debugging check
+                    console.log("Grouped Locations:", groupedLocations); // ✅ Debugging check
 
-        // ✅ Now, create the bubbles
-        Object.values(groupedLocations).forEach(group => {
-           // ✅ Create Individual Club Markers (slightly offset so they don’t overlap)
-group.clubs.forEach((club, index) => {
-    let clubLat = group.lat + (index * 0.0002); // Small shift to separate markers
-    let clubLng = group.lng + (index * 0.0002);
+                    // ✅ Now, Create Markers for Both Super Bubbles and Individual Clubs
+                    Object.values(groupedLocations).forEach(group => {
+                        createSuperBubble(group);
+                        createClubMarkers(group);
+                    });
+                })
+                .catch(error => console.error("Error loading CSV:", error));
+        }
 
-    let clubBubbleSize = Math.min(80, 30 + club.players / 20);
-    let clubBubble = document.createElement("div");
-    clubBubble.style.width = clubBubbleSize + "px";
-    clubBubble.style.height = clubBubbleSize + "px";
-    clubBubble.style.borderRadius = "50%";
-    clubBubble.style.backgroundColor = "blue"; // Club markers in blue
-    clubBubble.style.display = "flex";
-    clubBubble.style.justifyContent = "center";
-    clubBubble.style.alignItems = "center";
-    clubBubble.style.color = "white";
-    clubBubble.style.fontWeight = "bold";
-    clubBubble.style.border = "2px solid white";
-    clubBubble.innerText = club.players;
+        // ✅ Function to Create Super Bubbles
+        function createSuperBubble(group) {
+            let clubNames = group.clubs.map(c => `${c.name}: ${c.players} players`).join("<br>");
 
-    let clubMarker = new google.maps.marker.AdvancedMarkerElement({
-        position: { lat: clubLat, lng: clubLng },
-        title: club.name,
-        content: clubBubble
-    });
+            let superBubbleSize = Math.min(100, 40 + group.totalPlayers / 30);
+            let superBubble = document.createElement("div");
+            superBubble.style.width = superBubbleSize + "px";
+            superBubble.style.height = superBubbleSize + "px";
+            superBubble.style.borderRadius = "50%";
+            superBubble.style.backgroundColor = "#D3D3D3"; // Light gray
+            superBubble.style.display = "flex";
+            superBubble.style.justifyContent = "center";
+            superBubble.style.alignItems = "center";
+            superBubble.style.color = "black";
+            superBubble.style.fontWeight = "bold";
+            superBubble.style.border = "2px solid white";
+            superBubble.innerText = group.totalPlayers;
 
-    clubMarker.map = window.map; // ✅ Ensure marker is assigned to map
+            let superMarker = new google.maps.marker.AdvancedMarkerElement({
+                position: { lat: group.lat, lng: group.lng },
+                title: "Super Bubble",
+                content: superBubble
+            });
 
-    let clubInfoWindow = new google.maps.InfoWindow({
-        content: `<div style="text-align:center;">
-                    <strong>${club.name}</strong><br>Players: ${club.players}
-                  </div>`
-    });
-
-    clubBubble.addEventListener("click", () => {
-        clubInfoWindow.open(map, clubMarker);
-    });
-
-    clubMarker.category = "club";
-    markers.push(clubMarker);
-});
-
-superMarker.map = window.map; // ✅ Ensure marker is assigned to map
-
+            superMarker.map = window.map;
 
             let infoWindow = new google.maps.InfoWindow({
                 content: `<div style="text-align:center;">
@@ -145,43 +135,69 @@ superMarker.map = window.map; // ✅ Ensure marker is assigned to map
             });
 
             superBubble.addEventListener("click", () => {
-                infoWindow.open(map, superMarker);
+                infoWindow.open(window.map, superMarker);
             });
 
-            superMarker.category = "super";
             superBubbles.push(superMarker);
-        });
-
-    })
-    .catch(error => console.error("Error loading CSV:", error));
-
-        // Haversine formula to calculate distance between two lat/lng points
-        function haversineDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Radius of Earth in km
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c; // Distance in km
         }
 
-        // Filtering function
+        // ✅ Function to Create Individual Club Markers
+        function createClubMarkers(group) {
+            group.clubs.forEach((club, index) => {
+                let clubLat = group.lat + (index * 0.0002); // Small shift to separate markers
+                let clubLng = group.lng + (index * 0.0002);
+
+                let clubBubbleSize = Math.min(80, 30 + club.players / 20);
+                let clubBubble = document.createElement("div");
+                clubBubble.style.width = clubBubbleSize + "px";
+                clubBubble.style.height = clubBubbleSize + "px";
+                clubBubble.style.borderRadius = "50%";
+                clubBubble.style.backgroundColor = "blue";
+                clubBubble.style.display = "flex";
+                clubBubble.style.justifyContent = "center";
+                clubBubble.style.alignItems = "center";
+                clubBubble.style.color = "white";
+                clubBubble.style.fontWeight = "bold";
+                clubBubble.style.border = "2px solid white";
+                clubBubble.innerText = club.players;
+
+                let clubMarker = new google.maps.marker.AdvancedMarkerElement({
+                    position: { lat: clubLat, lng: clubLng },
+                    title: club.name,
+                    content: clubBubble
+                });
+
+                clubMarker.map = window.map;
+
+                let clubInfoWindow = new google.maps.InfoWindow({
+                    content: `<div style="text-align:center;">
+                                <strong>${club.name}</strong><br>Players: ${club.players}
+                              </div>`
+                });
+
+                clubBubble.addEventListener("click", () => {
+                    clubInfoWindow.open(window.map, clubMarker);
+                });
+
+                markers.push(clubMarker);
+            });
+        }
+
+        // ✅ Filtering function
         function filterMarkers() {
             let selectedFilter = document.getElementById("filter").value;
 
             markers.forEach(marker => {
-                marker.map = (selectedFilter === "all") ? map : null;
+                marker.map = (selectedFilter === "all") ? window.map : null;
             });
 
             superBubbles.forEach(marker => {
-                marker.map = (selectedFilter === "super" || selectedFilter === "all") ? map : null;
+                marker.map = (selectedFilter === "super" || selectedFilter === "all") ? window.map : null;
             });
         }
     </script>
 
-    <!-- 🔹 GOOGLE MAPS API (Ensure This is At the End) -->
+    <!-- 🔹 GOOGLE MAPS API -->
     <script async defer 
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXOfD-urA6wwow_1mz0O-bSJ9PjwXylhQ&callback=initMap&libraries=marker">
     </script>
