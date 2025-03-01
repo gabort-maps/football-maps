@@ -141,7 +141,7 @@ if (foundGroup) {
         function createSuperBubble(group) {
             let clubNames = group.clubs.map(c => `${c.name}: ${c.players} players`).join("<br>");
 
-            let superBubbleSize = Math.min(100, 40 + group.totalPlayers / 30);
+           let superBubbleSize = Math.min(150, 50 + group.totalPlayers / 25); // Max size increased to 150
             let superBubble = document.createElement("div");
             superBubble.style.width = superBubbleSize + "px";
             superBubble.style.height = superBubbleSize + "px";
@@ -155,11 +155,13 @@ if (foundGroup) {
             superBubble.style.border = "2px solid white";
             superBubble.innerText = group.totalPlayers;
 
-            let superMarker = new google.maps.marker.AdvancedMarkerElement({
-                position: { lat: group.lat, lng: group.lng },
-                title: "Super Bubble",
-                content: superBubble
-            });
+           let superMarker = new google.maps.marker.AdvancedMarkerElement({
+    position: { lat: group.lat - 0.0003, lng: group.lng - 0.0003 }, // Slight shift for layering
+    title: "Super Bubble",
+    content: superBubble,
+    zIndex: 1 // Ensures Super Bubble is behind club bubbles
+});
+
 
             superMarker.map = window.map;
 
