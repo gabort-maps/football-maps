@@ -61,7 +61,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
             console.log("Google Maps API loaded successfully and `initMap` is running!");
 
             window.map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 9,  
+                zoom: 11,  
                 center: { lat: 41.5, lng: 2.1 },  
                 mapId: "6d21538ba521f729"
             });
@@ -199,7 +199,7 @@ if (club.players > 500) {
 } else if (club.players > 100) {
     color = "green"; // Small clubs (100-300 players)
 } else {
-    color = "yellow"; // Very small clubs (<100 players)
+    color = "blue"; // Very small clubs (<100 players)
 }
 
 clubBubble.style.backgroundColor = color;
