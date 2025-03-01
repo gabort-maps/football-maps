@@ -45,16 +45,20 @@
 let markers = []; // Stores all club markers
 let superBubbles = []; // Stores all super bubbles
 
+// ✅ Ensure `initMap` is accessible globally
 window.initMap = function() {
-    console.log("Google Maps API loaded successfully!");
-    
+    console.log("Google Maps API loaded successfully and `initMap` is running!");
+
     var map = new google.maps.Map(document.getElementById("map"), {
         zoom: 9,  
         center: { lat: 41.5, lng: 2.1 },  
         mapId: "6d21538ba521f729"
     });
 
-    // Your existing map logic...
+    // ✅ Debugging Check
+    if (!map) {
+        console.error("Map failed to initialize!");
+    }
 };
 
     fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
