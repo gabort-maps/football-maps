@@ -135,9 +135,9 @@
 
     markers.forEach(marker => {
         if (selectedCategory === "all" || marker.category === selectedCategory) {
-            marker.map = map; // Show the marker
+            marker.map = map; // ✅ Show the marker
         } else {
-            marker.map = null; // Hide the marker
+            marker.map = undefined; // ✅ Properly hides the marker
         }
     });
 }
