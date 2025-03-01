@@ -15,12 +15,21 @@
             margin: 10px;
         }
        select {
-    font-size: 14px; /* ✅ Smaller font for compact design */
+    font-size: 14px;  /* ✅ Smaller font for compact design */
     padding: 5px;
     width: 220px;  /* ✅ Keeps dropdown smaller */
-    max-height: 40px; /* ✅ Keeps dropdown compact */
-    overflow: hidden; /* ✅ Prevents unnecessary scrolling */
+    height: auto; /* ✅ Expands when selecting multiple options */
+    max-height: 100px; /* ✅ Allows showing multiple selected options */
+    overflow-y: auto; /* ✅ Adds scrolling only when necessary */
 }
+
+/* ✅ Ensures each option is clearly visible */
+#filter option {
+    font-size: 14px; /* ✅ Keeps text readable */
+    padding: 5px;
+    white-space: nowrap; /* ✅ Prevents text from wrapping */
+}
+
 
 /* ✅ Improves spacing inside the dropdown */
 #filter option {
