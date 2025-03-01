@@ -43,6 +43,7 @@
     <script>
         let markers = []; // Stores all individual club markers
         let superBubbles = []; // Stores all super bubble markers
+        let groupedLocations = {}; // ✅ Now it's available everywhere
 
         // ✅ Initialize the Map
         window.initMap = function() {
@@ -71,8 +72,7 @@
                     console.log(data); // ✅ Log the CSV content
 
                     const rows = data.split("\n").slice(1); // Remove header
-                    let groupedLocations = {}; // Store grouped clubs by location
-
+                   
                     rows.forEach(row => {
                         const columns = row.split(",");
                         if (columns.length >= 4) {
