@@ -14,12 +14,28 @@
             text-align: center;
             margin: 10px;
         }
-        select {
-    font-size: 16px;
+       select {
+    font-size: 14px; /* ✅ Smaller font for compact design */
     padding: 5px;
-    width: 220px; /* ✅ Makes the dropdown wider */
-    height: auto;
+    width: 220px;  /* ✅ Keeps dropdown smaller */
+    max-height: 40px; /* ✅ Keeps dropdown compact */
+    overflow: hidden; /* ✅ Prevents unnecessary scrolling */
 }
+
+/* ✅ Improves spacing inside the dropdown */
+#filter option {
+    font-size: 14px; /* ✅ Matches smaller text */
+    padding: 5px;
+    white-space: nowrap; /* ✅ Prevents text from wrapping */
+}
+
+
+/* ✅ Ensures text is fully visible */
+#filter option {
+    padding: 8px;
+    white-space: nowrap; /* ✅ Prevents text from wrapping */
+}
+
 
 #filter-container {
     text-align: center;
