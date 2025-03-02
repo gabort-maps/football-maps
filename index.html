@@ -355,14 +355,15 @@ function filterMarkers() {
             if (selectedOptions.includes("grouped") && marker.inSuperBubble) showMarker = true;
         }
 
-       if (!selectedRegions.includes("all")) {
+      if (selectedRegions.includes("all")) {
+    showMarker = true;  // ✅ Show ALL clubs when "All Regions" is selected
+} else {
     if (!marker.region || !selectedRegions.includes(marker.region)) {
-        showMarker = false; // ✅ Hides markers outside selected regions
+        showMarker = false; // ✅ Hide clubs not in the selected region
     } else {
-        showMarker = true;  // ✅ Ensures clubs in the region remain visible
+        showMarker = true;  // ✅ Show clubs in the selected region
     }
 }
-
         marker.map = showMarker ? window.map : null;
     });
 
