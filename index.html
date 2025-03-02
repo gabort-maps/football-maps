@@ -364,10 +364,18 @@ clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are
 // ✅ Special handling for "Super Bubbles" filter
 if (selectedOptions.includes("super")) {
     showMarker = false;  // Hide individual clubs
+    showSuperBubble = true; // ✅ Ensure Super Bubbles are shown
 }
 
-// ✅ Apply final visibility to the marker
-marker.map = showMarker ? window.map : null;
+// ✅ Make sure region filtering still works
+if (!selectedRegions.includes("all")) {
+    if (!marker.region || !selectedRegions.includes(marker.region)) {
+        showSuperBubble = false;
+    }
+}
+
+// ✅ Apply final visibility rule for super bubbles
+marker.map = showSuperBubble ? window.map : null;
 
     });
 
