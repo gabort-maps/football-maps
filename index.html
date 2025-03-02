@@ -379,22 +379,16 @@ marker.map = showSuperBubble ? window.map : null;
 
     });
 
- superBubbles.forEach(marker => {
-    let showSuperBubble = false;
-
-    // ✅ Check if the super bubble belongs to a selected region
-    if (selectedRegions.includes("all") || selectedRegions.includes(marker.region)) {
-        showSuperBubble = true;
+superBubbles.forEach(marker => {
+    let showSuperBubble = selectedOptions.includes("super"); // ✅ Show only if "Super Bubbles" is selected
+    
+    // ✅ Also apply region filtering
+    if (!selectedRegions.includes("all") && !selectedRegions.includes(marker.region)) {
+        showSuperBubble = false; // ✅ Hide if the region filter doesn't match
     }
 
-    // ✅ Now also check if any club sizes are selected
-    if (!selectedOptions.includes("all")) {
-        let hasMatchingClub = false;
-
-        // ✅ Find the corresponding grouped clubs
-        let correspondingGroup = Object.values(groupedLocations).find(group => 
-            group.lat === marker.position.lat && group.lng === marker.position.lng
-        );
+    marker.map = showSuperBubble ? window.map : null;
+});
 
         if (correspondingGroup) {
             correspondingGroup.clubs.forEach(club => {
