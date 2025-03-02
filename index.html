@@ -357,8 +357,8 @@ function filterMarkers() {
             if (selectedOptions.includes("grouped") && marker.inSuperBubble) showMarker = true;
         }
 
-      if (selectedRegions.includes("all")) {
-    showMarker = true;  // ✅ Show ALL clubs when "All Regions" is selected
+      if (selectedOptions.includes("all")) {
+    showMarker = showMarker && (selectedRegions.includes("all") || selectedRegions.includes(marker.region));
 } else {
     if (!marker.region || !selectedRegions.includes(marker.region)) {
         showMarker = false; // ✅ Hide clubs not in the selected region
