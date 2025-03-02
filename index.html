@@ -254,6 +254,12 @@ let superMarker = new google.maps.marker.AdvancedMarkerElement({
     zIndex: 1
 });
 
+// ✅ Assign region to the super bubble (stored as a JavaScript property)
+superMarker.region = group.region; 
+
+// ✅ Debugging Check: Log Assigned Regions
+console.log(`Super Bubble at (${group.lat}, ${group.lng}) assigned to region: ${superMarker.region}`);
+
 // ✅ Assign region as a JavaScript property instead of passing it inside the object
 superMarker.region = group.region;
 
