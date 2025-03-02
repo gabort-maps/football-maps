@@ -112,7 +112,7 @@
     <div class="filter-box">
         <label for="region-filter">Region:</label>
         <select id="region-filter" multiple onchange="filterMarkers()">
-    <option value="all">All Regions</option>
+   <option value="all" selected>All Regions</option>
     <option value="Vallés Occidental">Vallés Occidental</option>
     <option value="Vallés Oriental">Vallés Oriental</option>
 </select>
@@ -357,12 +357,16 @@ marker.map = showMarker ? window.map : null;
 
     });
 
-    superBubbles.forEach(marker => {
-        marker.map = (selectedOptions.includes("super") || selectedOptions.includes("all")) ? window.map : null;
+  superBubbles.forEach(marker => {
+    marker.map = (selectedOptions.includes("super") || selectedOptions.includes("all")) ? window.map : null;
+});
+
+// ✅ Ensure "All Clubs" also shows individual clubs
+if (selectedOptions.includes("all")) {
+    markers.forEach(marker => {
+        marker.map = window.map;
     });
 }
-
-
 
 
     </script>
