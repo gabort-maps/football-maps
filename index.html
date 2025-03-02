@@ -339,7 +339,7 @@ clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are
         // ✅ Filtering function
  function filterMarkers() {
     let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
-    let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
+   let selectedRegions = [...document.getElementById("region-filter").selectedOptions].map(opt => opt.value);
 
     markers.forEach(marker => {
         let players = parseInt(marker.content.innerText);
