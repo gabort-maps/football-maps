@@ -327,6 +327,8 @@ clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are
         // ✅ Filtering function
   function filterMarkers() {
     let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
+    let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
+
 
     markers.forEach(marker => {
         let players = parseInt(marker.content.innerText);
@@ -343,7 +345,15 @@ clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are
             if (selectedOptions.includes("grouped") && marker.inSuperBubble) showMarker = true;
         }
 
-        marker.map = showMarker ? window.map : null;
+        // ✅ Region filtering: Only show if the region matches, or if "All Regions" is selected
+if (!selectedRegions.includes("all")) {
+    if (!marker.region || !selectedRegions.includes(marker.region)) {
+        showMarker = false;
+    }
+}
+
+marker.map = showMarker ? window.map : null;
+
     });
 
     superBubbles.forEach(marker => {
