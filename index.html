@@ -227,59 +227,44 @@ if (foundGroup) {
         }
 
         // ✅ Function to Create Super Bubbles
-        function createSuperBubble(group) {
-            let clubNames = group.clubs.map(c => `${c.name}: ${c.players} players`).join("<br>");
+      function createSuperBubble(group) {
+    let clubNames = group.clubs.map(c => `${c.name}: ${c.players} players`).join("<br>");
 
-           let superBubbleSize = Math.min(150, 50 + group.totalPlayers / 25); // Max size increased to 150
-           let superBubble = document.createElement("div");
-superBubble.style.width = superBubbleSize + "px";
-superBubble.style.height = superBubbleSize + "px";
-superBubble.style.borderRadius = "50%";
-superBubble.style.backgroundColor = "#D3D3D3"; // Light gray
-superBubble.style.display = "flex";
-superBubble.style.justifyContent = "center";
-superBubble.style.alignItems = "center";
-superBubble.style.color = "black";
-superBubble.style.fontWeight = "bold";
-superBubble.style.border = "2px solid white";
-superBubble.innerText = group.totalPlayers;
+    let superBubbleSize = Math.min(100, 40 + group.totalPlayers / 30);
+    let superBubble = document.createElement("div");
+    superBubble.style.width = superBubbleSize + "px";
+    superBubble.style.height = superBubbleSize + "px";
+    superBubble.style.borderRadius = "50%";
+    superBubble.style.backgroundColor = "#D3D3D3"; // Light gray
+    superBubble.style.display = "flex";
+    superBubble.style.justifyContent = "center";
+    superBubble.style.alignItems = "center";
+    superBubble.style.color = "black";
+    superBubble.style.fontWeight = "bold";
+    superBubble.style.border = "2px solid white";
+    superBubble.innerText = group.totalPlayers;
 
-// ✅ Attach the region as a dataset attribute
-superBubble.dataset.region = group.region || "Unknown";  
+    // ✅ Attach the region as a dataset attribute
+    superBubble.dataset.region = group.region || "Unknown";  
 
-let superMarker = new google.maps.marker.AdvancedMarkerElement({
-    position: { lat: group.lat - 0.0003, lng: group.lng - 0.0003 },
-    title: "Super Bubble",
-    content: superBubble,
-    zIndex: 1
-});
+    // ✅ Declare `superMarker` only once inside the function
+    const superMarker = new google.maps.marker.AdvancedMarkerElement({
+        position: { lat: group.lat - 0.0003, lng: group.lng - 0.0003 },
+        title: "Super Bubble",
+        content: superBubble,
+        zIndex: 1
+    });
 
-// ✅ Store a reference to the dataset region inside the marker
-superMarker.region = superBubble.dataset.region; 
+    // ✅ Store the region inside the marker
+    superMarker.region = superBubble.dataset.region;  
 
-// ✅ Debugging: Check if region is assigned correctly
-console.log(`Super Bubble at (${group.lat}, ${group.lng}) assigned to region: ${superMarker.region}`);
+    // ✅ Debugging: Check if region is assigned correctly
+    console.log(`Super Bubble at (${group.lat}, ${group.lng}) assigned to region: ${superMarker.region}`);
 
-let superMarker = new google.maps.marker.AdvancedMarkerElement({
-    position: { lat: group.lat - 0.0003, lng: group.lng - 0.0003 },
-    title: "Super Bubble",
-    content: superBubble,
-    zIndex: 1
-});
-
-// ✅ Assign region to the super bubble (stored as a JavaScript property)
-superMarker.region = group.region || "Unknown"; 
-
-// ✅ Debugging Check: Log Assigned Regions
-console.log(`Super Bubble at (${group.lat}, ${group.lng}) assigned to region: ${superMarker.region}`);
-
-
-// ✅ Ensure `group.region` exists
-if (group.region) {
-    superMarker.region = group.region; 
-} else {
-    console.warn(`⚠ Warning: Super Bubble at ${group.lat}, ${group.lng} has no region!`);
+    // ✅ Add marker to `superBubbles` array
+    superBubbles.push(superMarker);
 }
+
 
 
 superMarker.region = group.region; // ✅ Assign region to the super bubble
