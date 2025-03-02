@@ -282,65 +282,68 @@
         }
 
         // ✅ Filtering function
-        function filterMarkers() {
-            let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
-            let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
+      function filterMarkers() {
+    let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
+    let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
 
-            // Step 1: Filter Individual Club Markers
-            markers.forEach(marker => {
-                let players = parseInt(marker.content.innerText);
-                let region = marker.region;
+    // Step 1: Filter Individual Club Markers
+    markers.forEach(marker => {
+        let players = parseInt(marker.content.innerText);
+        let region = marker.region;
 
-                // Check if the marker matches the club size filter
-                let clubSizeMatch =
-                    selectedOptions.includes("all") || // "All Clubs" is selected
-                    (selectedOptions.includes("large") && players > 500) ||
-                    (selectedOptions.includes("medium") && players > 300 && players <= 500) ||
-                    (selectedOptions.includes("small") && players > 100 && players <= 300) ||
-                    (selectedOptions.includes("very-small") && players <= 100) ||
-                    (selectedOptions.includes("grouped") && marker.inSuperBubble);
+        // Check if the marker matches the club size filter
+        let clubSizeMatch =
+            selectedOptions.includes("all") || // "All Clubs" is selected
+            (selectedOptions.includes("large") && players > 500) ||
+            (selectedOptions.includes("medium") && players > 300 && players <= 500) ||
+            (selectedOptions.includes("small") && players > 100 && players <= 300) ||
+            (selectedOptions.includes("very-small") && players <= 100) ||
+            (selectedOptions.includes("grouped") && marker.inSuperBubble);
 
-                // Check if the marker matches the region filter
-                let regionMatch =
-                    selectedRegions.includes("all") || // "All Regions" is selected
-                    selectedRegions.includes(region);
+        // Check if the marker matches the region filter
+        let regionMatch =
+            selectedRegions.includes("all") || // "All Regions" is selected
+            selectedRegions.includes(region);
 
-                // Show or hide the marker based on both filters
-                marker.map = clubSizeMatch && regionMatch ? window.map : null;
-            });
+        // Show or hide the marker based on both filters
+        marker.map = clubSizeMatch && regionMatch ? window.map : null;
+    });
 
-            // Step 2: Filter Super Bubbles
-            superBubbles.forEach(superBubble => {
-                let region = superBubble.region;
+    // Step 2: Filter Super Bubbles
+    superBubbles.forEach(superBubble => {
+        let region = superBubble.region;
 
-                // Check if the Super Bubble matches the region filter
-                let regionMatch =
-                    selectedRegions.includes("all") || // "All Regions" is selected
-                    selectedRegions.includes(region);
+        // Check if the Super Bubble matches the region filter
+        let regionMatch =
+            selectedRegions.includes("all") || // "All Regions" is selected
+            selectedRegions.includes(region);
 
-                // Check if the Super Bubble should be shown based on club size filter
-                let clubSizeMatch = true; // Assume it matches by default
-                if (!selectedOptions.includes("all") && !selectedOptions.includes("super")) {
-                    // Find the group of clubs in this Super Bubble
-                    let group = Object.values(groupedLocations).find(g =>
-                        g.lat === superBubble.position.lat && g.lng === superBubble.position.lng
-                    );
+        // Check if the Super Bubble should be shown based on club size filter
+        let clubSizeMatch = false; // Assume it doesn't match by default
 
-                    // Check if any club in the group matches the club size filter
-                    if (group) {
-                        clubSizeMatch = group.clubs.some(club =>
-                            (selectedOptions.includes("large") && club.players > 500) ||
-                            (selectedOptions.includes("medium") && club.players > 300 && club.players <= 500) ||
-                            (selectedOptions.includes("small") && club.players > 100 && club.players <= 300) ||
-                            (selectedOptions.includes("very-small") && club.players <= 100)
-                        );
-                    }
-                }
+        if (selectedOptions.includes("all") || selectedOptions.includes("super")) {
+            // Show Super Bubbles if "All Clubs" or "Super Bubbles" is selected
+            clubSizeMatch = true;
+        } else if (!selectedOptions.includes("super")) {
+            // If "Super Bubbles" is NOT selected, check if any club in the Super Bubble matches the club size filter
+            let group = Object.values(groupedLocations).find(g =>
+                g.lat === superBubble.position.lat && g.lng === superBubble.position.lng
+            );
 
-                // Show or hide the Super Bubble based on both filters
-                superBubble.map = clubSizeMatch && regionMatch ? window.map : null;
-            });
+            if (group) {
+                clubSizeMatch = group.clubs.some(club =>
+                    (selectedOptions.includes("large") && club.players > 500) ||
+                    (selectedOptions.includes("medium") && club.players > 300 && club.players <= 500) ||
+                    (selectedOptions.includes("small") && club.players > 100 && club.players <= 300) ||
+                    (selectedOptions.includes("very-small") && club.players <= 100)
+                );
+            }
         }
+
+        // Show or hide the Super Bubble based on both filters
+        superBubble.map = clubSizeMatch && regionMatch ? window.map : null;
+    });
+}
 
         // ✅ Ensure default selections are applied when the page loads
         window.onload = function () {
