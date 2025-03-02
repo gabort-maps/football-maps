@@ -375,15 +375,17 @@ if (!selectedOptions.includes("all")) {
         marker.map = showMarker ? window.map : null;
     });
 
-    superBubbles.forEach(marker => {
+   superBubbles.forEach(marker => {
     let showSuperBubble = false;
 
-    // ✅ Super Bubble should only appear if its region is selected
+    // ✅ Step 1: Check if the region filter allows this super bubble to be visible
     if (selectedRegions.includes("all") || selectedRegions.includes(marker.region)) {
         showSuperBubble = true;
+    } else {
+        showSuperBubble = false;
     }
 
-    // ✅ If filtering by club size, check if at least one club in the group matches
+    // ✅ Step 2: If club filtering is active (excluding "Super Bubbles"), check if clubs in the super bubble match
     if (!selectedOptions.includes("all") && !selectedOptions.includes("super")) {
         let hasMatchingClub = Object.values(groupedLocations).some(group => {
             return group.lat === marker.position.lat && group.lng === marker.position.lng &&
@@ -395,11 +397,11 @@ if (!selectedOptions.includes("all")) {
                 );
         });
 
-        // ✅ If NO matching clubs in the region, hide the super bubble
+        // ✅ Step 3: Hide the super bubble if no clubs match the selected filters
         showSuperBubble = showSuperBubble && hasMatchingClub;
     }
 
-    // ✅ Ensure Super Bubbles are visible when "Super Bubbles" option is selected
+    // ✅ Step 4: If "Super Bubbles" is selected, show them no matter what
     if (selectedOptions.includes("super")) {
         showSuperBubble = true;
     }
