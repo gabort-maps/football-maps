@@ -227,7 +227,7 @@ if (foundGroup) {
         }
 
         // ✅ Function to Create Super Bubbles
-      function createSuperBubble(group) {
+  function createSuperBubble(group) {
     let clubNames = group.clubs.map(c => `${c.name}: ${c.players} players`).join("<br>");
 
     let superBubbleSize = Math.min(100, 40 + group.totalPlayers / 30);
@@ -261,29 +261,22 @@ if (foundGroup) {
     // ✅ Debugging: Check if region is assigned correctly
     console.log(`Super Bubble at (${group.lat}, ${group.lng}) assigned to region: ${superMarker.region}`);
 
+    // ✅ Attach the marker to the map
+    superMarker.map = window.map;
+
+    let infoWindow = new google.maps.InfoWindow({
+        content: `<div style="text-align:center;">
+                    <strong>Football Field</strong><br>${clubNames}
+                  </div>`
+    });
+
+    superBubble.addEventListener("click", () => {
+        infoWindow.open(window.map, superMarker);
+    });
+
     // ✅ Add marker to `superBubbles` array
     superBubbles.push(superMarker);
 }
-
-
-
-superMarker.region = group.region; // ✅ Assign region to the super bubble
-
-
-            superMarker.map = window.map;
-
-            let infoWindow = new google.maps.InfoWindow({
-                content: `<div style="text-align:center;">
-                            <strong>Football Field</strong><br>${clubNames}
-                          </div>`
-            });
-
-            superBubble.addEventListener("click", () => {
-                infoWindow.open(window.map, superMarker);
-            });
-
-            superBubbles.push(superMarker);
-        }
 
         // ✅ Function to Create Individual Club Markers
         function createClubMarkers(group) {
