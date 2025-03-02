@@ -342,57 +342,29 @@ function filterMarkers() {
     let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
     console.log("Club Size Filter Selected:", selectedOptions);
 
-    markers.forEach(marker => {
-   
+   markers.forEach(marker => {
     let players = parseInt(marker.content.innerText);
     let showMarker = false;
 
-          if (selectedOptions.includes("all")) {
-    showMarker = true;  // ✅ Start by showing all clubs
-}
+    // ✅ Step 1: If "All Clubs" is selected, show everything (Region filter still applies)
+    if (selectedOptions.includes("all")) {
+        showMarker = selectedRegions.includes("all") || selectedRegions.includes(marker.region);
+    } 
+    // ✅ Step 2: Apply club size filtering only if "All Clubs" is NOT selected
+    else {
+        let clubSizeMatch =
+            (selectedOptions.includes("large") && players > 500) ||
+            (selectedOptions.includes("medium") && players > 300 && players <= 500) ||
+            (selectedOptions.includes("small") && players > 100 && players <= 300) ||
+            (selectedOptions.includes("very-small") && players <= 100) ||
+            (selectedOptions.includes("grouped") && marker.inSuperBubble);
 
-// ✅ Apply region filtering properly
-if (!selectedRegions.includes("all")) {
-    if (!marker.region || !selectedRegions.includes(marker.region)) {
-        showMarker = false;  // ✅ Hide clubs not in the selected region
+        showMarker = clubSizeMatch && (selectedRegions.includes("all") || selectedRegions.includes(marker.region));
     }
-}
 
-// ✅ Apply club size filtering only if "All Clubs" is NOT selected
-if (!selectedOptions.includes("all")) {
-    let clubSizeMatch =
-        (selectedOptions.includes("large") && players > 500) ||
-        (selectedOptions.includes("medium") && players > 300 && players <= 500) ||
-        (selectedOptions.includes("small") && players > 100 && players <= 300) ||
-        (selectedOptions.includes("very-small") && players <= 100) ||
-        (selectedOptions.includes("grouped") && marker.inSuperBubble);
+    marker.map = showMarker ? window.map : null;
+});
 
-    showMarker = showMarker && clubSizeMatch;  // ✅ Club size filter is applied correctly
-} else {
-            if (selectedOptions.includes("large") && players > 500) showMarker = true;
-            if (selectedOptions.includes("medium") && players > 300 && players <= 500) showMarker = true;
-            if (selectedOptions.includes("small") && players > 100 && players <= 300) showMarker = true;
-            if (selectedOptions.includes("very-small") && players <= 100) showMarker = true;
-            if (selectedOptions.includes("grouped") && marker.inSuperBubble) showMarker = true;
-        }
-
-     if (!selectedRegions.includes("all") && (!marker.region || !selectedRegions.includes(marker.region))) {
-    showMarker = false;  // ✅ Hide markers outside selected regions
-}
-
-if (!selectedOptions.includes("all")) {
-    let clubSizeMatch =
-        (selectedOptions.includes("large") && players > 500) ||
-        (selectedOptions.includes("medium") && players > 300 && players <= 500) ||
-        (selectedOptions.includes("small") && players > 100 && players <= 300) ||
-        (selectedOptions.includes("very-small") && players <= 100) ||
-        (selectedOptions.includes("grouped") && marker.inSuperBubble);
-
-    showMarker = showMarker && clubSizeMatch;  // ✅ Club size filter is applied correctly
-}
-
-        marker.map = showMarker ? window.map : null;
-    });
 
   superBubbles.forEach(marker => {
     let showSuperBubble = false;
