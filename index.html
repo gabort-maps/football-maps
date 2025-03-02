@@ -23,12 +23,12 @@
         #filters-wrapper {
             display: flex;
             justify-content: center;
-            gap: 20px; /* Space between filters */
-            margin: 20px 0;
-            padding: 15px;
+            gap: 15px; /* Reduced space between filters */
+            margin: 15px 0; /* Reduced margin */
+            padding: 10px; /* Reduced padding */
             background-color: #f8f9fa; /* Light gray background */
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            border-radius: 8px; /* Slightly smaller rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
         }
 
         /* 🔹 Styling for Each Filter Box */
@@ -36,23 +36,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px; /* Space between label and dropdown */
+            gap: 5px; /* Reduced space between label and dropdown */
         }
 
         /* 🔹 Styling for Labels */
         .filter-box label {
-            font-size: 14px;
+            font-size: 12px; /* Smaller font size */
             font-weight: 600; /* Semi-bold */
             color: #333; /* Dark gray text */
         }
 
         /* 🔹 Styling for Dropdowns */
         #filter, #region-filter {
-            font-size: 14px;
-            padding: 8px 12px;
-            width: 220px; /* Slightly wider */
+            font-size: 12px; /* Smaller font size */
+            padding: 6px 10px; /* Smaller padding */
+            width: 180px; /* Narrower width */
             border: 1px solid #ced4da; /* Light gray border */
-            border-radius: 6px; /* Rounded corners */
+            border-radius: 5px; /* Slightly smaller rounded corners */
             background-color: #fff; /* White background */
             color: #495057; /* Dark gray text */
             cursor: pointer;
@@ -62,20 +62,20 @@
         /* 🔹 Hover Effect for Dropdowns */
         #filter:hover, #region-filter:hover {
             border-color: #80bdff; /* Light blue border on hover */
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1); /* Subtle glow */
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1); /* Subtle glow */
         }
 
         /* 🔹 Focus Effect for Dropdowns */
         #filter:focus, #region-filter:focus {
             border-color: #80bdff; /* Light blue border on focus */
             outline: none; /* Remove default outline */
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Stronger glow */
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* Stronger glow */
         }
 
         /* 🔹 Styling for Dropdown Options */
         #filter option, #region-filter option {
-            font-size: 14px;
-            padding: 8px;
+            font-size: 12px; /* Smaller font size */
+            padding: 6px; /* Smaller padding */
             background-color: #fff; /* White background */
             color: #333; /* Dark gray text */
         }
