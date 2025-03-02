@@ -337,9 +337,9 @@ clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are
         }
 
         // ✅ Filtering function
- function filterMarkers() {
+function filterMarkers() {
     let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
-   let selectedRegions = [...document.getElementById("region-filter").selectedOptions].map(opt => opt.value);
+    let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
 
     markers.forEach(marker => {
         let players = parseInt(marker.content.innerText);
@@ -355,77 +355,37 @@ clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are
             if (selectedOptions.includes("grouped") && marker.inSuperBubble) showMarker = true;
         }
 
-      if (!selectedRegions.includes("all")) {
-    if (!marker.region || !selectedRegions.includes(marker.region)) {
-        showMarker = false;
-    }
-}
+        if (!selectedRegions.includes("all")) {
+            if (!marker.region || !selectedRegions.includes(marker.region)) {
+                showMarker = false;
+            }
+        }
 
-// ✅ Special handling for "Super Bubbles" filter
-if (selectedOptions.includes("super")) {
-    showMarker = false;  // Hide individual clubs
-    showSuperBubble = true; // ✅ Ensure Super Bubbles are shown
-}
-
-// ✅ Make sure region filtering still works
-if (!selectedRegions.includes("all")) {
-    if (!marker.region || !selectedRegions.includes(marker.region)) {
-        showSuperBubble = false;
-    }
-}
-
-// ✅ Apply final visibility rule for super bubbles
-marker.map = showSuperBubble ? window.map : null;
-
+        marker.map = showMarker ? window.map : null;
     });
 
-superBubbles.forEach(marker => {
-    let showSuperBubble = selectedOptions.includes("super"); // ✅ Show only if "Super Bubbles" is selected
-    
-    // ✅ Also apply region filtering
-    if (!selectedRegions.includes("all") && !selectedRegions.includes(marker.region)) {
-        showSuperBubble = false; // ✅ Hide if the region filter doesn't match
-    }
+    superBubbles.forEach(marker => {
+        let showSuperBubble = false;
 
-    marker.map = showSuperBubble ? window.map : null;
-});
-
-        if (correspondingGroup) {
-            correspondingGroup.clubs.forEach(club => {
-                let players = club.players;
-
-                if (selectedOptions.includes("large") && players > 500) hasMatchingClub = true;
-                if (selectedOptions.includes("medium") && players > 300 && players <= 500) hasMatchingClub = true;
-                if (selectedOptions.includes("small") && players > 100 && players <= 300) hasMatchingClub = true;
-                if (selectedOptions.includes("very-small") && players <= 100) hasMatchingClub = true;
-            });
+        if (selectedRegions.includes("all")) {
+            showSuperBubble = true;
+        } else {
+            if (selectedRegions.includes(marker.region)) {
+                showSuperBubble = true;
+            }
         }
 
-        if (!hasMatchingClub) {
-            showSuperBubble = false; // ✅ Hide super bubble if no clubs match the selected size
-        }
-    }
-
-    // ✅ If "Super Bubbles" is selected, show only super bubbles and hide all clubs
-if (selectedOptions.includes("super")) {
-    showSuperBubble = true;
-}
-
-// ✅ Apply visibility to the super bubble marker
-marker.map = showSuperBubble ? window.map : null;
-
-});
-
+        marker.map = showSuperBubble ? window.map : null;
+    });
 
     if (selectedOptions.includes("all")) {
         markers.forEach(marker => {
             marker.map = window.map;
         });
-
-} // <-- ✅ Make sure this closing brace is here!
+    }
+} // ✅ Make sure this is the last closing bracket!
 
 </script>
-
 
     <!-- 🔹 GOOGLE MAPS API -->
     <script async defer 
