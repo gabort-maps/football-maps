@@ -357,15 +357,21 @@ function filterMarkers() {
             if (selectedOptions.includes("grouped") && marker.inSuperBubble) showMarker = true;
         }
 
-      if (selectedOptions.includes("all")) {
-    showMarker = showMarker && (selectedRegions.includes("all") || selectedRegions.includes(marker.region));
-} else {
-    if (!marker.region || !selectedRegions.includes(marker.region)) {
-        showMarker = false; // ✅ Hide clubs not in the selected region
-    } else {
-        showMarker = true;  // ✅ Show clubs in the selected region
-    }
+     if (!selectedRegions.includes("all") && (!marker.region || !selectedRegions.includes(marker.region))) {
+    showMarker = false;  // ✅ Hide markers outside selected regions
 }
+
+if (!selectedOptions.includes("all")) {
+    let clubSizeMatch =
+        (selectedOptions.includes("large") && players > 500) ||
+        (selectedOptions.includes("medium") && players > 300 && players <= 500) ||
+        (selectedOptions.includes("small") && players > 100 && players <= 300) ||
+        (selectedOptions.includes("very-small") && players <= 100) ||
+        (selectedOptions.includes("grouped") && marker.inSuperBubble);
+
+    showMarker = showMarker && clubSizeMatch;  // ✅ Club size filter is applied correctly
+}
+
         marker.map = showMarker ? window.map : null;
     });
 
