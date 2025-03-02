@@ -81,9 +81,17 @@
     <option value="grouped">Only Clubs in Super Bubbles</option>
 </select>
 
-
-
     </div>
+<!-- ✅ New Region Filter (Place this right below the club filter) -->
+<div id="region-filter-container" style="text-align:center; margin:10px;">
+    <label for="region-filter">Region:</label>
+    <select id="region-filter" multiple onchange="filterMarkers()">
+        <option value="all">All Regions</option>
+        <option value="North">North</option>
+        <option value="South">South</option>
+        <!-- Add more regions as needed -->
+    </select>
+</div>
 
     <!-- 🔹 MAP CONTAINER -->
     <div id="map"></div>
