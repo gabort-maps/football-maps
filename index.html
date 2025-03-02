@@ -416,6 +416,13 @@ if (!selectedOptions.includes("all")) {
         });
     }
 } // ✅ Make sure this is the last closing bracket!
+        
+// ✅ Ensure default selections are applied when the page loads
+window.onload = function () {
+    document.getElementById("filter").value = "all"; // Default: "All Clubs"
+    document.getElementById("region-filter").value = "all"; // Default: "All Regions"
+    filterMarkers(); // ✅ Apply filtering immediately
+};
 
 </script>
 
