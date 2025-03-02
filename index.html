@@ -384,7 +384,7 @@ if (!selectedOptions.includes("all")) {
     }
 
     // ✅ If filtering by club size, check if at least one club in the group matches
-    if (!selectedOptions.includes("all")) {
+    if (!selectedOptions.includes("all") && !selectedOptions.includes("super")) {
         let hasMatchingClub = Object.values(groupedLocations).some(group => {
             return group.lat === marker.position.lat && group.lng === marker.position.lng &&
                 group.clubs.some(club =>
@@ -395,7 +395,13 @@ if (!selectedOptions.includes("all")) {
                 );
         });
 
-        showSuperBubble = showSuperBubble && hasMatchingClub;  // ✅ Hide super bubbles if no club matches
+        // ✅ If NO matching clubs in the region, hide the super bubble
+        showSuperBubble = showSuperBubble && hasMatchingClub;
+    }
+
+    // ✅ Ensure Super Bubbles are visible when "Super Bubbles" option is selected
+    if (selectedOptions.includes("super")) {
+        showSuperBubble = true;
     }
 
     marker.map = showSuperBubble ? window.map : null;
