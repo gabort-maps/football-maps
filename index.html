@@ -375,39 +375,40 @@ if (!selectedOptions.includes("all")) {
         marker.map = showMarker ? window.map : null;
     });
 
-   superBubbles.forEach(marker => {
+  superBubbles.forEach(marker => {
     let showSuperBubble = false;
 
-    // ✅ Step 1: Check if the region filter allows this super bubble to be visible
+    // ✅ Step 1: If "All Regions" is selected OR the region matches, keep it visible
     if (selectedRegions.includes("all") || selectedRegions.includes(marker.region)) {
         showSuperBubble = true;
     } else {
-        showSuperBubble = false;
+        showSuperBubble = false; // Hide if the region filter doesn't match
     }
 
     // ✅ Step 2: If club filtering is active (excluding "Super Bubbles"), check if clubs in the super bubble match
     if (!selectedOptions.includes("all") && !selectedOptions.includes("super")) {
-        let hasMatchingClub = Object.values(groupedLocations).some(group => {
-            return group.lat === marker.position.lat && group.lng === marker.position.lng &&
-                group.clubs.some(club =>
-                    (selectedOptions.includes("large") && club.players > 500) ||
-                    (selectedOptions.includes("medium") && club.players > 300 && club.players <= 500) ||
-                    (selectedOptions.includes("small") && club.players > 100 && club.players <= 300) ||
-                    (selectedOptions.includes("very-small") && club.players <= 100)
-                );
-        });
+        let hasMatchingClub = Object.values(groupedLocations).some(group =>
+            group.lat === marker.position.lat && group.lng === marker.position.lng &&
+            group.clubs.some(club =>
+                (selectedOptions.includes("large") && club.players > 500) ||
+                (selectedOptions.includes("medium") && club.players > 300 && club.players <= 500) ||
+                (selectedOptions.includes("small") && club.players > 100 && club.players <= 300) ||
+                (selectedOptions.includes("very-small") && club.players <= 100)
+            )
+        );
 
-        // ✅ Step 3: Hide the super bubble if no clubs match the selected filters
+        // ✅ Hide the super bubble if no clubs inside match the selected filters
         showSuperBubble = showSuperBubble && hasMatchingClub;
     }
 
-    // ✅ Step 4: If "Super Bubbles" is selected, show them no matter what
+    // ✅ Step 3: If "Super Bubbles" is selected, **always** show them
     if (selectedOptions.includes("super")) {
         showSuperBubble = true;
     }
 
     marker.map = showSuperBubble ? window.map : null;
 });
+
 
     if (selectedOptions.includes("all")) {
         markers.forEach(marker => {
