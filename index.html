@@ -347,9 +347,7 @@ function filterMarkers() {
     let players = parseInt(marker.content.innerText);
     let showMarker = false;
 
-    console.log(`Checking Marker: ${marker.title}, Players: ${players}`); // 🔹 Debugging
-
-        if (selectedOptions.includes("all")) {
+            if (selectedOptions.includes("all")) {
             showMarker = true;
         } else {
             if (selectedOptions.includes("large") && players > 500) showMarker = true;
