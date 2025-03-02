@@ -4,92 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Clubs Map</title>
-
     <style>
-        /* 🔹 General Styling */
-        body {
-            font-family: Arial, sans-serif;
+        /* 🔹 Reset default margins and padding */
+        html, body {
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+            height: 100%;
+            overflow: hidden;
         }
 
+        /* 🔹 Map Container */
         #map {
-            height: 80vh;
+            height: 100vh;
             width: 100%;
         }
 
-/* 🔹 Styling for the Filters Wrapper */
-#filters-wrapper {
-    display: flex;
-    justify-content: center;
-    gap: 15px; /* Space between filters */
-    margin: 4px 0; /* Almost no vertical margin */
-    padding: 2px; /* Almost no padding */
-    background-color: #f8f9fa; /* Light gray background */
-    border-radius: 8px; /* Slightly smaller rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
+        /* 🔹 Filters Wrapper */
+        #filters-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0;
+            padding: 4px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
 
-/* 🔹 Styling for Each Filter Box */
-.filter-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0; /* No space between label and dropdown */
-}
+        /* 🔹 Styling for Each Filter Box */
+        .filter-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px; /* Minimal space between label and dropdown */
+        }
 
-/* 🔹 Styling for Labels */
-.filter-box label {
-    font-size: 12px; /* Smaller font size */
-    font-weight: 600; /* Semi-bold */
-    color: #333; /* Dark gray text */
-    margin-bottom: 0; /* No space below the label */
-}
+        /* 🔹 Styling for Labels */
+        .filter-box label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+        }
 
-/* 🔹 Styling for Dropdowns */
-#filter, #region-filter {
-    font-size: 12px; /* Smaller font size */
-    padding: 2px 8px; /* Minimal vertical padding */
-    width: 220px; /* Wider width */
-    border: 1px solid #ced4da; /* Light gray border */
-    border-radius: 5px; /* Slightly smaller rounded corners */
-    background-color: #fff; /* White background */
-    color: #495057; /* Dark gray text */
-    cursor: pointer;
-    transition: all 0.3s ease; /* Smooth transitions */
-}
+        /* 🔹 Styling for Dropdowns */
+        #filter, #region-filter {
+            font-size: 12px;
+            padding: 4px 8px;
+            width: 220px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
         /* 🔹 Hover Effect for Dropdowns */
         #filter:hover, #region-filter:hover {
-            border-color: #80bdff; /* Light blue border on hover */
-            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1); /* Subtle glow */
+            border-color: #80bdff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
         }
 
         /* 🔹 Focus Effect for Dropdowns */
         #filter:focus, #region-filter:focus {
-            border-color: #80bdff; /* Light blue border on focus */
-            outline: none; /* Remove default outline */
-            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* Stronger glow */
+            border-color: #80bdff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
         }
 
         /* 🔹 Styling for Dropdown Options */
         #filter option, #region-filter option {
-            font-size: 12px; /* Smaller font size */
-            padding: 6px; /* Smaller padding */
-            background-color: #fff; /* White background */
-            color: #333; /* Dark gray text */
+            font-size: 12px;
+            padding: 6px;
+            background-color: #fff;
+            color: #333;
         }
 
         /* 🔹 Styling for Multiple Selected Options */
         #filter[multiple] option:checked, #region-filter[multiple] option:checked {
-            background-color: #007bff; /* Blue background for selected options */
-            color: #fff; /* White text for selected options */
+            background-color: #007bff;
+            color: #fff;
         }
     </style>
 </head>
 <body>
-
     <!-- 🔹 FILTER DROPDOWN -->
     <div id="filters-wrapper">
         <!-- Club Filter -->
@@ -119,6 +122,13 @@
 
     <!-- 🔹 MAP CONTAINER -->
     <div id="map"></div>
+
+    <!-- 🔹 Floating Signature with LinkedIn Logo -->
+    <div style="position: fixed; top: 10px; right: 10px; font-size: 12px; color: #666; background: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; align-items: center; gap: 5px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" style="width: 16px; height: 16px;">
+        Created by <strong>Tamas Gabor</strong> | 
+        <a href="https://www.linkedin.com/in/gabortamas/" target="_blank" style="color: #007bff; text-decoration: none;">LinkedIn</a>
+    </div>
 
     <!-- 🔹 JAVASCRIPT FOR MAP, SUPER BUBBLES, AND FILTERING -->
     <script>
@@ -392,12 +402,7 @@
             filterMarkers(); // ✅ Apply filtering immediately
         };
     </script>
-<!-- Floating Signature with LinkedIn Logo -->
-<div style="position: fixed; top: 10px; right: 10px; font-size: 12px; color: #666; background: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; align-items: center; gap: 5px;">
-    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" style="width: 16px; height: 16px;">
-    Created by <strong>Tamas Gabor</strong> | 
-    <a href="https://www.linkedin.com/in/gabortamas/" target="_blank" style="color: #007bff; text-decoration: none;">LinkedIn</a>
-</div>
+
     <!-- 🔹 GOOGLE MAPS API -->
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXOfD-urA6wwow_1mz0O-bSJ9PjwXylhQ&callback=initMap&libraries=marker">
