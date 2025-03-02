@@ -355,13 +355,20 @@ clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are
             if (selectedOptions.includes("grouped") && marker.inSuperBubble) showMarker = true;
         }
 
-        if (!selectedRegions.includes("all")) {
-            if (!marker.region || !selectedRegions.includes(marker.region)) {
-                showMarker = false;
-            }
-        }
+      if (!selectedRegions.includes("all")) {
+    if (!marker.region || !selectedRegions.includes(marker.region)) {
+        showMarker = false;
+    }
+}
 
-        marker.map = showMarker ? window.map : null;
+// ✅ Special handling for "Super Bubbles" filter
+if (selectedOptions.includes("super")) {
+    showMarker = false;  // Hide individual clubs
+}
+
+// ✅ Apply final visibility to the marker
+marker.map = showMarker ? window.map : null;
+
     });
 
  superBubbles.forEach(marker => {
@@ -397,7 +404,14 @@ clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are
         }
     }
 
-    marker.map = showSuperBubble ? window.map : null;
+    // ✅ If "Super Bubbles" is selected, show only super bubbles and hide all clubs
+if (selectedOptions.includes("super")) {
+    showSuperBubble = true;
+}
+
+// ✅ Apply visibility to the super bubble marker
+marker.map = showSuperBubble ? window.map : null;
+
 });
 
 
