@@ -360,9 +360,22 @@ marker.map = showMarker ? window.map : null;
     });
 }
 
-  superBubbles.forEach(marker => {
-    marker.map = (selectedOptions.includes("super") || selectedOptions.includes("all")) ? window.map : null;
+ superBubbles.forEach(marker => {
+    let showSuperBubble = false;
+
+    // ✅ If "All Regions" is selected, show all super bubbles
+    if (selectedRegions.includes("all")) {
+        showSuperBubble = true;
+    } else {
+        // ✅ Only show Super Bubbles that match the selected regions
+        if (selectedRegions.includes(marker.region)) {
+            showSuperBubble = true;
+        }
+    }
+
+    marker.map = showSuperBubble ? window.map : null;
 });
+
 
 // ✅ Ensure "All Clubs" also shows individual clubs
 if (selectedOptions.includes("all")) {
