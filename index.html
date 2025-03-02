@@ -355,28 +355,43 @@ function filterMarkers() {
             if (selectedOptions.includes("grouped") && marker.inSuperBubble) showMarker = true;
         }
 
-        if (!selectedRegions.includes("all")) {
-            if (!marker.region || !selectedRegions.includes(marker.region)) {
-                showMarker = false;
-            }
+       // ✅ Ensure markers only appear in selected regions
+superBubbles.forEach(marker => {
+    let showSuperBubble = false;
+
+    // ✅ Ensure super bubbles follow the region filter
+    if (selectedRegions.includes("all") || selectedRegions.includes(marker.region)) {
+        showSuperBubble = true;
+    }
+
+    // ✅ Ensure they also follow club size filters
+    if (!selectedOptions.includes("all")) {
+        let hasMatchingClub = false;
+
+        // ✅ Find the group that belongs to this super bubble
+        let correspondingGroup = Object.values(groupedLocations).find(group => 
+            group.lat.toFixed(6) === marker.position.lat.toFixed(6) && 
+            group.lng.toFixed(6) === marker.position.lng.toFixed(6)
+        );
+
+        if (correspondingGroup) {
+            correspondingGroup.clubs.forEach(club => {
+                let players = club.players;
+                if (selectedOptions.includes("large") && players > 500) hasMatchingClub = true;
+                if (selectedOptions.includes("medium") && players > 300 && players <= 500) hasMatchingClub = true;
+                if (selectedOptions.includes("small") && players > 100 && players <= 300) hasMatchingClub = true;
+                if (selectedOptions.includes("very-small") && players <= 100) hasMatchingClub = true;
+            });
         }
 
-        marker.map = showMarker ? window.map : null;
-    });
-
-    superBubbles.forEach(marker => {
-        let showSuperBubble = false;
-
-        if (selectedRegions.includes("all")) {
-            showSuperBubble = true;
-        } else {
-            if (selectedRegions.includes(marker.region)) {
-                showSuperBubble = true;
-            }
+        // ✅ If no clubs match the selected filter, hide the super bubble
+        if (!hasMatchingClub) {
+            showSuperBubble = false;
         }
+    }
 
-        marker.map = showSuperBubble ? window.map : null;
-    });
+    marker.map = showSuperBubble ? window.map : null;
+});
 
     if (selectedOptions.includes("all")) {
         markers.forEach(marker => {
