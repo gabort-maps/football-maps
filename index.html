@@ -376,18 +376,30 @@ if (!selectedOptions.includes("all")) {
     });
 
     superBubbles.forEach(marker => {
-        let showSuperBubble = false;
+    let showSuperBubble = false;
 
-        if (selectedRegions.includes("all")) {
-            showSuperBubble = true;
-        } else {
-            if (selectedRegions.includes(marker.region)) {
-                showSuperBubble = true;
-            }
-        }
+    // ✅ Super Bubble should only appear if its region is selected
+    if (selectedRegions.includes("all") || selectedRegions.includes(marker.region)) {
+        showSuperBubble = true;
+    }
 
-        marker.map = showSuperBubble ? window.map : null;
-    });
+    // ✅ If filtering by club size, check if at least one club in the group matches
+    if (!selectedOptions.includes("all")) {
+        let hasMatchingClub = Object.values(groupedLocations).some(group => {
+            return group.lat === marker.position.lat && group.lng === marker.position.lng &&
+                group.clubs.some(club =>
+                    (selectedOptions.includes("large") && club.players > 500) ||
+                    (selectedOptions.includes("medium") && club.players > 300 && club.players <= 500) ||
+                    (selectedOptions.includes("small") && club.players > 100 && club.players <= 300) ||
+                    (selectedOptions.includes("very-small") && club.players <= 100)
+                );
+        });
+
+        showSuperBubble = showSuperBubble && hasMatchingClub;  // ✅ Hide super bubbles if no club matches
+    }
+
+    marker.map = showSuperBubble ? window.map : null;
+});
 
     if (selectedOptions.includes("all")) {
         markers.forEach(marker => {
