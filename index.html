@@ -231,21 +231,34 @@ if (foundGroup) {
             let clubNames = group.clubs.map(c => `${c.name}: ${c.players} players`).join("<br>");
 
            let superBubbleSize = Math.min(150, 50 + group.totalPlayers / 25); // Max size increased to 150
-            let superBubble = document.createElement("div");
-            superBubble.style.width = superBubbleSize + "px";
-            superBubble.style.height = superBubbleSize + "px";
-            superBubble.style.borderRadius = "50%";
-            superBubble.style.backgroundColor = "#D3D3D3"; // Light gray
-            superBubble.style.display = "flex";
-            superBubble.style.justifyContent = "center";
-            superBubble.style.alignItems = "center";
-            superBubble.style.color = "black";
-            superBubble.style.fontWeight = "bold";
-            superBubble.style.border = "2px solid white";
-            superBubble.innerText = group.totalPlayers;
+           let superBubble = document.createElement("div");
+superBubble.style.width = superBubbleSize + "px";
+superBubble.style.height = superBubbleSize + "px";
+superBubble.style.borderRadius = "50%";
+superBubble.style.backgroundColor = "#D3D3D3"; // Light gray
+superBubble.style.display = "flex";
+superBubble.style.justifyContent = "center";
+superBubble.style.alignItems = "center";
+superBubble.style.color = "black";
+superBubble.style.fontWeight = "bold";
+superBubble.style.border = "2px solid white";
+superBubble.innerText = group.totalPlayers;
 
-         // ✅ Debugging: Check if `group.region` exists before assigning
-console.log(`Creating Super Bubble at ${group.lat}, ${group.lng} - Region:`, group.region);
+// ✅ Attach the region as a dataset attribute
+superBubble.dataset.region = group.region || "Unknown";  
+
+let superMarker = new google.maps.marker.AdvancedMarkerElement({
+    position: { lat: group.lat - 0.0003, lng: group.lng - 0.0003 },
+    title: "Super Bubble",
+    content: superBubble,
+    zIndex: 1
+});
+
+// ✅ Store a reference to the dataset region inside the marker
+superMarker.region = superBubble.dataset.region; 
+
+// ✅ Debugging: Check if region is assigned correctly
+console.log(`Super Bubble at (${group.lat}, ${group.lng}) assigned to region: ${superMarker.region}`);
 
 let superMarker = new google.maps.marker.AdvancedMarkerElement({
     position: { lat: group.lat - 0.0003, lng: group.lng - 0.0003 },
