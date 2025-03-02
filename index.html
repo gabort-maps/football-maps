@@ -136,10 +136,11 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
                     rows.forEach(row => {
                         const columns = row.split(",");
                         if (columns.length >= 4) {
-                            const name = columns[0].trim();
-                            const lat = parseFloat(columns[1]);
-                            const lng = parseFloat(columns[2]);
-                            const players = parseInt(columns[3]);
+                           const name = columns[0].trim();
+                           const region = columns[1].trim();  // ✅ New: Capture region
+                           const lat = parseFloat(columns[2]);
+                           const lng = parseFloat(columns[3]);
+                           const players = parseInt(columns[4]);
 
                             if (isNaN(lat) || isNaN(lng) || isNaN(players)) {
                                 console.warn(`Skipping invalid row: ${row}`);
@@ -160,12 +161,15 @@ for (let existingKey in groupedLocations) {
 
 // ✅ If a group is found, add the club to it
 if (foundGroup) {
-    foundGroup.clubs.push({ name, players });
+    foundGroup.clubs.push({ name, players, region });
     foundGroup.totalPlayers += players;
 } else {
-    // ✅ Otherwise, create a new group
     groupedLocations[`${lat},${lng}`] = { 
-        lat, lng, totalPlayers: players, clubs: [{ name, players }]
+        lat, 
+        lng, 
+        totalPlayers: players, 
+        clubs: [{ name, players, region }],
+        region: region  // ✅ Store the region for filtering
     };
 }
 
