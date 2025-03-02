@@ -380,28 +380,23 @@ if (selectedRegions.includes("all") || selectedRegions.includes(marker.region)) 
     let showSuperBubble = false;
 
     // ✅ Step 1: If "All Regions" is selected OR the region matches, keep it visible
-   if (selectedOptions.includes("super")) {
+  if (selectedOptions.includes("super") || selectedOptions.includes("grouped")) {
     showSuperBubble = selectedRegions.includes("all") || selectedRegions.includes(marker.region);
 } else {
-    showSuperBubble = false; // ✅ Hide Super Bubbles if "Super" is not selected
+    showSuperBubble = false; // ✅ Hide Super Bubbles if neither "Super" nor "Grouped" is selected
 }
 
 
     // ✅ Step 2: If club filtering is active (excluding "Super Bubbles"), check if clubs in the super bubble match
-    if (!selectedOptions.includes("all") && !selectedOptions.includes("super")) {
-        let hasMatchingClub = Object.values(groupedLocations).some(group =>
-            group.lat === marker.position.lat && group.lng === marker.position.lng &&
-            group.clubs.some(club =>
-                (selectedOptions.includes("large") && club.players > 500) ||
-                (selectedOptions.includes("medium") && club.players > 300 && club.players <= 500) ||
-                (selectedOptions.includes("small") && club.players > 100 && club.players <= 300) ||
-                (selectedOptions.includes("very-small") && club.players <= 100)
-            )
-        );
+  // ✅ Step 2: If "Only Clubs in Super Bubble" is selected, show only Super Bubbles that contain clubs
+if (selectedOptions.includes("grouped")) {
+    let hasMatchingClub = Object.values(groupedLocations).some(group =>
+        group.lat === marker.position.lat && group.lng === marker.position.lng
+    );
 
-        // ✅ Hide the super bubble if no clubs inside match the selected filters
-        showSuperBubble = showSuperBubble && hasMatchingClub;
-    }
+    showSuperBubble = hasMatchingClub; // ✅ Only show Super Bubbles for grouped clubs
+}
+
 
     // ✅ Step 3: If "Super Bubbles" is selected, **always** show them
     if (selectedOptions.includes("super")) {
