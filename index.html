@@ -347,9 +347,9 @@ function filterMarkers() {
     let players = parseInt(marker.content.innerText);
     let showMarker = false;
 
-            if (selectedOptions.includes("all")) {
-            showMarker = true;
-        } else {
+           if (selectedOptions.includes("all")) {
+    showMarker = selectedRegions.includes("all") || selectedRegions.includes(marker.region);
+} else {
             if (selectedOptions.includes("large") && players > 500) showMarker = true;
             if (selectedOptions.includes("medium") && players > 300 && players <= 500) showMarker = true;
             if (selectedOptions.includes("small") && players > 100 && players <= 300) showMarker = true;
