@@ -123,14 +123,7 @@
     <!-- 🔹 MAP CONTAINER -->
     <div id="map"></div>
 
-    <!-- 🔹 Floating Signature with LinkedIn Logo -->
-    <div style="position: fixed; top: 10px; right: 10px; font-size: 12px; color: #666; background: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; align-items: center; gap: 5px;">
-        <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" style="width: 16px; height: 16px;">
-        Created by <strong>Tamas Gabor</strong> | 
-        <a href="https://www.linkedin.com/in/gabortamas/" target="_blank" style="color: #007bff; text-decoration: none;">LinkedIn</a>
-    </div>
-
-    <!-- 🔹 JAVASCRIPT FOR MAP, SUPER BUBBLES, AND FILTERING -->
+       <!-- 🔹 JAVASCRIPT FOR MAP, SUPER BUBBLES, AND FILTERING -->
     <script>
         let markers = []; // Stores all individual club markers
         let superBubbles = []; // Stores all super bubble markers
@@ -402,7 +395,23 @@
             filterMarkers(); // ✅ Apply filtering immediately
         };
     </script>
+<!-- Floating Signature with LinkedIn Logo -->
+<div style="position: fixed; top: 10px; right: 10px; font-size: 12px; color: #666; background: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; align-items: center; gap: 5px; z-index: 1000;">
+    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" style="width: 16px; height: 16px;">
+    Created by <strong>Tamas Gabor</strong> | 
+    <a href="https://www.linkedin.com/in/gabortamas/" target="_blank" style="color: #007bff; text-decoration: none;">LinkedIn</a>
+</div>
 
+<!-- Responsive Positioning for Mobile -->
+<style>
+    @media (max-width: 768px) {
+        div[style*="position: fixed; top: 10px; right: 10px;"] {
+            top: auto;
+            bottom: 10px;
+            right: 10px;
+        }
+    }
+</style>
     <!-- 🔹 GOOGLE MAPS API -->
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXOfD-urA6wwow_1mz0O-bSJ9PjwXylhQ&callback=initMap&libraries=marker">
