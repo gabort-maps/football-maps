@@ -384,28 +384,29 @@ superBubbles.forEach(marker => {
             });
         }
 
-        // ✅ If no clubs match the selected filter, hide the super bubble
-        if (!hasMatchingClub) {
-            showSuperBubble = false;
-        }
+          // ✅ If no clubs match the selected filter, hide the super bubble
+    if (!hasMatchingClub) {
+        showSuperBubble = false;
     }
 
     marker.map = showSuperBubble ? window.map : null;
 });
 
-    if (selectedOptions.includes("all")) {
-        markers.forEach(marker => {
-            marker.map = window.map;
-        });
-    }
-} // ✅ Make sure this is the last closing bracket!
+// ✅ Ensure "All Clubs" also shows individual clubs correctly
+if (selectedOptions.includes("all")) {
+    markers.forEach(marker => {
+        marker.map = window.map;
+    });
+}
+
+} // ✅ This closes the `filterMarkers()` function correctly!
 
 </script>
 
-    <!-- 🔹 GOOGLE MAPS API -->
-    <script async defer 
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXOfD-urA6wwow_1mz0O-bSJ9PjwXylhQ&callback=initMap&libraries=marker">
-    </script>
+<!-- 🔹 GOOGLE MAPS API -->
+<script async defer 
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXOfD-urA6wwow_1mz0O-bSJ9PjwXylhQ&callback=initMap&libraries=marker">
+</script>
 
 </body>
 </html>
