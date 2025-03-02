@@ -52,10 +52,10 @@
         }
 
         /* 🔹 Styling for Dropdowns */
-        #filter, #region-filter {
+        #filter, #region-filter, #club-name-filter {
             font-size: 12px;
             padding: 4px 8px;
-            width: 220px;
+            width: 180px; /* Reduced width for mobile compatibility */
             border: 1px solid #ced4da;
             border-radius: 5px;
             background-color: #fff;
@@ -65,20 +65,20 @@
         }
 
         /* 🔹 Hover Effect for Dropdowns */
-        #filter:hover, #region-filter:hover {
+        #filter:hover, #region-filter:hover, #club-name-filter:hover {
             border-color: #80bdff;
             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
         }
 
         /* 🔹 Focus Effect for Dropdowns */
-        #filter:focus, #region-filter:focus {
+        #filter:focus, #region-filter:focus, #club-name-filter:focus {
             border-color: #80bdff;
             outline: none;
             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
         }
 
         /* 🔹 Styling for Dropdown Options */
-        #filter option, #region-filter option {
+        #filter option, #region-filter option, #club-name-filter option {
             font-size: 12px;
             padding: 6px;
             background-color: #fff;
@@ -86,7 +86,7 @@
         }
 
         /* 🔹 Styling for Multiple Selected Options */
-        #filter[multiple] option:checked, #region-filter[multiple] option:checked {
+        #filter[multiple] option:checked, #region-filter[multiple] option:checked, #club-name-filter[multiple] option:checked {
             background-color: #007bff;
             color: #fff;
         }
@@ -118,12 +118,30 @@
                 <option value="Vallés Oriental">Vallés Oriental</option>
             </select>
         </div>
+
+        <!-- Club Name Filter -->
+        <div class="filter-box">
+            <label for="club-name-filter">Club Name:</label>
+            <select id="club-name-filter" multiple onchange="filterMarkers()">
+                <option value="all" selected>All Clubs</option>
+                <!-- Club names will be dynamically populated -->
+            </select>
+        </div>
     </div>
 
     <!-- 🔹 MAP CONTAINER -->
     <div id="map"></div>
 
-       <!-- 🔹 JAVASCRIPT FOR MAP, SUPER BUBBLES, AND FILTERING -->
+    <!-- 🔹 Floating Signature with LinkedIn Logo -->
+    <div style="position: fixed; top: 10px; right: 10px; z-index: 1000;">
+        <div style="font-size: 12px; color: #666; background: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: inline-flex; align-items: center; gap: 5px;">
+            <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" style="width: 16px; height: 16px;">
+            Created by <strong>Tamas Gabor</strong> | 
+            <a href="https://www.linkedin.com/in/gabortamas/" target="_blank" style="color: #007bff; text-decoration: none;">LinkedIn</a>
+        </div>
+    </div>
+
+    <!-- 🔹 JAVASCRIPT FOR MAP, SUPER BUBBLES, AND FILTERING -->
     <script>
         let markers = []; // Stores all individual club markers
         let superBubbles = []; // Stores all super bubble markers
@@ -219,6 +237,9 @@
                         }
                         createClubMarkers(group); // ✅ Always create club markers
                     });
+
+                    // ✅ Populate Club Names in the Filter
+                    populateClubNames();
                 })
                 .catch(error => console.error("Error loading CSV:", error));
         }
@@ -324,15 +345,29 @@
             return "blue"; // Very small clubs
         }
 
+        // ✅ Function to Populate Club Names
+        function populateClubNames() {
+            const clubNameFilter = document.getElementById("club-name-filter");
+            markers.forEach(marker => {
+                const clubName = marker.title;
+                const option = document.createElement("option");
+                option.value = clubName;
+                option.text = clubName;
+                clubNameFilter.appendChild(option);
+            });
+        }
+
         // ✅ Filtering function
         function filterMarkers() {
             let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
             let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
+            let selectedClubs = Array.from(document.getElementById("club-name-filter").selectedOptions).map(opt => opt.value);
 
             // Step 1: Filter Individual Club Markers
             markers.forEach(marker => {
                 let players = parseInt(marker.content.innerText);
                 let region = marker.region;
+                let clubName = marker.title;
 
                 // Check if the marker matches the club size filter
                 let clubSizeMatch =
@@ -348,8 +383,13 @@
                     selectedRegions.includes("all") || // "All Regions" is selected
                     selectedRegions.includes(region);
 
-                // Show or hide the marker based on both filters
-                marker.map = clubSizeMatch && regionMatch ? window.map : null;
+                // Check if the marker matches the club name filter
+                let clubNameMatch =
+                    selectedClubs.includes("all") || // "All Clubs" is selected
+                    selectedClubs.includes(clubName);
+
+                // Show or hide the marker based on all filters
+                marker.map = clubSizeMatch && regionMatch && clubNameMatch ? window.map : null;
             });
 
             // Step 2: Filter Super Bubbles
@@ -392,28 +432,11 @@
         window.onload = function () {
             document.getElementById("filter").value = "all"; // Default: "All Clubs"
             document.getElementById("region-filter").value = "all"; // Default: "All Regions"
+            document.getElementById("club-name-filter").value = "all"; // Default: "All Clubs"
             filterMarkers(); // ✅ Apply filtering immediately
         };
     </script>
-<!-- Floating Signature with LinkedIn Logo -->
-<div style="position: fixed; top: 10px; right: 10px; z-index: 1000;">
-    <div style="font-size: 12px; color: #666; background: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: inline-flex; align-items: center; gap: 5px;">
-        <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" style="width: 16px; height: 16px;">
-        Created by <strong>Tamas Gabor</strong> | 
-        <a href="https://www.linkedin.com/in/gabortamas/" target="_blank" style="color: #007bff; text-decoration: none;">LinkedIn</a>
-    </div>
-</div>
 
-<!-- Responsive Positioning for Mobile -->
-<style>
-    @media (max-width: 768px) {
-        div[style*="position: fixed; top: 10px; right: 10px;"] {
-            top: auto;
-            bottom: 10px;
-            right: 10px;
-        }
-    }
-</style>
     <!-- 🔹 GOOGLE MAPS API -->
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXOfD-urA6wwow_1mz0O-bSJ9PjwXylhQ&callback=initMap&libraries=marker">
