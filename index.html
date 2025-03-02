@@ -352,11 +352,10 @@ function filterMarkers() {
 }
 
 // ✅ Apply Region Filtering Separately
-if (!selectedRegions.includes("all")) {
-    if (!marker.region || !selectedRegions.includes(marker.region)) {
-        showMarker = false;  // ✅ Hide clubs that don't match the region
-    }
+if (selectedOptions.includes("all") || selectedOptions.includes("super") || selectedOptions.includes("grouped")) {
+    showMarker = selectedRegions.includes("all") || selectedRegions.includes(marker.region);
 }
+
 
     // ✅ Step 2: Apply club size filtering only if "All Clubs" is NOT selected
     else {
@@ -378,7 +377,7 @@ if (!selectedRegions.includes("all")) {
     let showSuperBubble = false;
 
     // ✅ Step 1: If "All Regions" is selected OR the region matches, keep it visible
-   if (selectedOptions.includes("super")) {
+   if (selectedOptions.includes("super") || selectedOptions.includes("all")) {
     showSuperBubble = selectedRegions.includes("all") || selectedRegions.includes(marker.region);
 }
 
