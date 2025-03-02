@@ -306,6 +306,7 @@ clubBubble.style.backgroundColor = color;
                     title: club.name,
                     content: clubBubble
                 });
+  clubMarker.region = group.region; // ✅ Assign region to the marker   
 clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are grouped
 
                 clubMarker.map = window.map;
