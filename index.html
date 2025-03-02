@@ -244,12 +244,14 @@ if (foundGroup) {
             superBubble.style.border = "2px solid white";
             superBubble.innerText = group.totalPlayers;
 
-           let superMarker = new google.maps.marker.AdvancedMarkerElement({
+          let superMarker = new google.maps.marker.AdvancedMarkerElement({
     position: { lat: group.lat - 0.0003, lng: group.lng - 0.0003 }, // Slight shift for layering
     title: "Super Bubble",
     content: superBubble,
     zIndex: 1 // Ensures Super Bubble is behind club bubbles
 });
+
+superMarker.region = group.region; // ✅ Assign region to the super bubble
 
 
             superMarker.map = window.map;
