@@ -6,45 +6,84 @@
     <title>Football Clubs Map</title>
 
     <style>
+        /* 🔹 General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
         #map {
             height: 80vh;
             width: 100%;
         }
-        #filter-container {
-            text-align: center;
-            margin: 10px;
-        }
-        select {
-            font-size: 12px;
-            padding: 5px;
-            width: 280px;
-            height: auto;
-            max-height: 120px;
-            overflow-y: auto;
-        }
-        #filter option, #region-filter option {
-            font-size: 12px;
-            padding: 4px;
-            white-space: nowrap;
-        }
+
+        /* 🔹 Styling for the Filters Wrapper */
         #filters-wrapper {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin: 10px 0;
+            gap: 20px; /* Space between filters */
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa; /* Light gray background */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
         }
+
+        /* 🔹 Styling for Each Filter Box */
         .filter-box {
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 8px; /* Space between label and dropdown */
         }
+
+        /* 🔹 Styling for Labels */
+        .filter-box label {
+            font-size: 14px;
+            font-weight: 600; /* Semi-bold */
+            color: #333; /* Dark gray text */
+        }
+
+        /* 🔹 Styling for Dropdowns */
         #filter, #region-filter {
-            font-size: 12px;
-            padding: 5px;
-            width: 200px;
-            height: auto;
-            max-height: 120px;
-            overflow-y: auto;
+            font-size: 14px;
+            padding: 8px 12px;
+            width: 220px; /* Slightly wider */
+            border: 1px solid #ced4da; /* Light gray border */
+            border-radius: 6px; /* Rounded corners */
+            background-color: #fff; /* White background */
+            color: #495057; /* Dark gray text */
+            cursor: pointer;
+            transition: all 0.3s ease; /* Smooth transitions */
+        }
+
+        /* 🔹 Hover Effect for Dropdowns */
+        #filter:hover, #region-filter:hover {
+            border-color: #80bdff; /* Light blue border on hover */
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1); /* Subtle glow */
+        }
+
+        /* 🔹 Focus Effect for Dropdowns */
+        #filter:focus, #region-filter:focus {
+            border-color: #80bdff; /* Light blue border on focus */
+            outline: none; /* Remove default outline */
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Stronger glow */
+        }
+
+        /* 🔹 Styling for Dropdown Options */
+        #filter option, #region-filter option {
+            font-size: 14px;
+            padding: 8px;
+            background-color: #fff; /* White background */
+            color: #333; /* Dark gray text */
+        }
+
+        /* 🔹 Styling for Multiple Selected Options */
+        #filter[multiple] option:checked, #region-filter[multiple] option:checked {
+            background-color: #007bff; /* Blue background for selected options */
+            color: #fff; /* White text for selected options */
         }
     </style>
 </head>
@@ -104,7 +143,7 @@
 
             window.map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 11,
-               center: { lat: 41.58326109938572, lng: 2.1728172154905083 }, // ✅ New center coordinates
+                center: { lat: 41.58326109938572, lng: 2.1728172154905083 }, // ✅ Updated center
                 mapId: "6d21538ba521f729"
             });
 
@@ -282,68 +321,68 @@
         }
 
         // ✅ Filtering function
-      function filterMarkers() {
-    let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
-    let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
+        function filterMarkers() {
+            let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
+            let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
 
-    // Step 1: Filter Individual Club Markers
-    markers.forEach(marker => {
-        let players = parseInt(marker.content.innerText);
-        let region = marker.region;
+            // Step 1: Filter Individual Club Markers
+            markers.forEach(marker => {
+                let players = parseInt(marker.content.innerText);
+                let region = marker.region;
 
-        // Check if the marker matches the club size filter
-        let clubSizeMatch =
-            selectedOptions.includes("all") || // "All Clubs" is selected
-            (selectedOptions.includes("large") && players > 500) ||
-            (selectedOptions.includes("medium") && players > 300 && players <= 500) ||
-            (selectedOptions.includes("small") && players > 100 && players <= 300) ||
-            (selectedOptions.includes("very-small") && players <= 100) ||
-            (selectedOptions.includes("grouped") && marker.inSuperBubble);
+                // Check if the marker matches the club size filter
+                let clubSizeMatch =
+                    selectedOptions.includes("all") || // "All Clubs" is selected
+                    (selectedOptions.includes("large") && players > 500) ||
+                    (selectedOptions.includes("medium") && players > 300 && players <= 500) ||
+                    (selectedOptions.includes("small") && players > 100 && players <= 300) ||
+                    (selectedOptions.includes("very-small") && players <= 100) ||
+                    (selectedOptions.includes("grouped") && marker.inSuperBubble);
 
-        // Check if the marker matches the region filter
-        let regionMatch =
-            selectedRegions.includes("all") || // "All Regions" is selected
-            selectedRegions.includes(region);
+                // Check if the marker matches the region filter
+                let regionMatch =
+                    selectedRegions.includes("all") || // "All Regions" is selected
+                    selectedRegions.includes(region);
 
-        // Show or hide the marker based on both filters
-        marker.map = clubSizeMatch && regionMatch ? window.map : null;
-    });
+                // Show or hide the marker based on both filters
+                marker.map = clubSizeMatch && regionMatch ? window.map : null;
+            });
 
-    // Step 2: Filter Super Bubbles
-    superBubbles.forEach(superBubble => {
-        let region = superBubble.region;
+            // Step 2: Filter Super Bubbles
+            superBubbles.forEach(superBubble => {
+                let region = superBubble.region;
 
-        // Check if the Super Bubble matches the region filter
-        let regionMatch =
-            selectedRegions.includes("all") || // "All Regions" is selected
-            selectedRegions.includes(region);
+                // Check if the Super Bubble matches the region filter
+                let regionMatch =
+                    selectedRegions.includes("all") || // "All Regions" is selected
+                    selectedRegions.includes(region);
 
-        // Check if the Super Bubble should be shown based on club size filter
-        let clubSizeMatch = false; // Assume it doesn't match by default
+                // Check if the Super Bubble should be shown based on club size filter
+                let clubSizeMatch = false; // Assume it doesn't match by default
 
-        if (selectedOptions.includes("all") || selectedOptions.includes("super")) {
-            // Show Super Bubbles if "All Clubs" or "Super Bubbles" is selected
-            clubSizeMatch = true;
-        } else if (!selectedOptions.includes("super")) {
-            // If "Super Bubbles" is NOT selected, check if any club in the Super Bubble matches the club size filter
-            let group = Object.values(groupedLocations).find(g =>
-                g.lat === superBubble.position.lat && g.lng === superBubble.position.lng
-            );
+                if (selectedOptions.includes("all") || selectedOptions.includes("super")) {
+                    // Show Super Bubbles if "All Clubs" or "Super Bubbles" is selected
+                    clubSizeMatch = true;
+                } else if (!selectedOptions.includes("super")) {
+                    // If "Super Bubbles" is NOT selected, check if any club in the Super Bubble matches the club size filter
+                    let group = Object.values(groupedLocations).find(g =>
+                        g.lat === superBubble.position.lat && g.lng === superBubble.position.lng
+                    );
 
-            if (group) {
-                clubSizeMatch = group.clubs.some(club =>
-                    (selectedOptions.includes("large") && club.players > 500) ||
-                    (selectedOptions.includes("medium") && club.players > 300 && club.players <= 500) ||
-                    (selectedOptions.includes("small") && club.players > 100 && club.players <= 300) ||
-                    (selectedOptions.includes("very-small") && club.players <= 100)
-                );
-            }
+                    if (group) {
+                        clubSizeMatch = group.clubs.some(club =>
+                            (selectedOptions.includes("large") && club.players > 500) ||
+                            (selectedOptions.includes("medium") && club.players > 300 && club.players <= 500) ||
+                            (selectedOptions.includes("small") && club.players > 100 && club.players <= 300) ||
+                            (selectedOptions.includes("very-small") && club.players <= 100)
+                        );
+                    }
+                }
+
+                // Show or hide the Super Bubble based on both filters
+                superBubble.map = clubSizeMatch && regionMatch ? window.map : null;
+            });
         }
-
-        // Show or hide the Super Bubble based on both filters
-        superBubble.map = clubSizeMatch && regionMatch ? window.map : null;
-    });
-}
 
         // ✅ Ensure default selections are applied when the page loads
         window.onload = function () {
