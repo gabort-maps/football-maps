@@ -364,19 +364,42 @@ clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are
         marker.map = showMarker ? window.map : null;
     });
 
-    superBubbles.forEach(marker => {
-        let showSuperBubble = false;
+ superBubbles.forEach(marker => {
+    let showSuperBubble = false;
 
-        if (selectedRegions.includes("all")) {
-            showSuperBubble = true;
-        } else {
-            if (selectedRegions.includes(marker.region)) {
-                showSuperBubble = true;
-            }
+    // ✅ Check if the super bubble belongs to a selected region
+    if (selectedRegions.includes("all") || selectedRegions.includes(marker.region)) {
+        showSuperBubble = true;
+    }
+
+    // ✅ Now also check if any club sizes are selected
+    if (!selectedOptions.includes("all")) {
+        let hasMatchingClub = false;
+
+        // ✅ Find the corresponding grouped clubs
+        let correspondingGroup = Object.values(groupedLocations).find(group => 
+            group.lat === marker.position.lat && group.lng === marker.position.lng
+        );
+
+        if (correspondingGroup) {
+            correspondingGroup.clubs.forEach(club => {
+                let players = club.players;
+
+                if (selectedOptions.includes("large") && players > 500) hasMatchingClub = true;
+                if (selectedOptions.includes("medium") && players > 300 && players <= 500) hasMatchingClub = true;
+                if (selectedOptions.includes("small") && players > 100 && players <= 300) hasMatchingClub = true;
+                if (selectedOptions.includes("very-small") && players <= 100) hasMatchingClub = true;
+            });
         }
 
-        marker.map = showSuperBubble ? window.map : null;
-    });
+        if (!hasMatchingClub) {
+            showSuperBubble = false; // ✅ Hide super bubble if no clubs match the selected size
+        }
+    }
+
+    marker.map = showSuperBubble ? window.map : null;
+});
+
 
     if (selectedOptions.includes("all")) {
         markers.forEach(marker => {
