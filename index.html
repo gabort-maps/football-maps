@@ -69,29 +69,35 @@
 <body>
 
     <!-- 🔹 FILTER DROPDOWN -->
-    <div id="filter-container">
-        <label for="filter">Filter:</label>
-       <select id="filter" multiple onchange="filterMarkers()">
-    <option value="all">All Clubs</option>
-    <option value="super">Super Bubbles</option>
-    <option value="large">Large Clubs (500+ Players)</option>
-    <option value="medium">Medium Clubs (300-500 Players)</option>
-    <option value="small">Small Clubs (100-300 Players)</option>
-    <option value="very-small">Very Small Clubs (Under 100 Players)</option>
-    <option value="grouped">Only Clubs in Super Bubbles</option>
-</select>
-
+  <!-- ✅ Wrap both filters in a new container -->
+<div id="filters-wrapper">
+    <!-- Club Filter -->
+    <div class="filter-box">
+        <label for="filter">Club Size:</label>
+        <select id="filter" multiple onchange="filterMarkers()">
+            <option value="all">All Clubs</option>
+            <option value="super">Super Bubbles</option>
+            <option value="large">Large Clubs (500+ Players)</option>
+            <option value="medium">Medium Clubs (300-500 Players)</option>
+            <option value="small">Small Clubs (100-300 Players)</option>
+            <option value="very-small">Very Small Clubs (Under 100 Players)</option>
+            <option value="grouped">Only Clubs in Super Bubbles</option>
+        </select>
     </div>
-<!-- ✅ New Region Filter (Place this right below the club filter) -->
-<div id="region-filter-container" style="text-align:center; margin:10px;">
-    <label for="region-filter">Region:</label>
-    <select id="region-filter" multiple onchange="filterMarkers()">
-        <option value="all">All Regions</option>
-        <option value="North">North</option>
-        <option value="South">South</option>
-        <!-- Add more regions as needed -->
-    </select>
+
+    <!-- Region Filter -->
+    <div class="filter-box">
+        <label for="region-filter">Region:</label>
+        <select id="region-filter" multiple onchange="filterMarkers()">
+            <option value="all">All Regions</option>
+            <option value="Region1">Region 1</option>
+            <option value="Region2">Region 2</option>
+            <option value="Region3">Region 3</option>
+            <!-- Add actual region names here -->
+        </select>
+    </div>
 </div>
+
 
     <!-- 🔹 MAP CONTAINER -->
     <div id="map"></div>
