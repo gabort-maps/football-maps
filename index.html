@@ -347,9 +347,17 @@ function filterMarkers() {
     let showMarker = false;
 
     // ✅ Step 1: If "All Clubs" is selected, show everything (Region filter still applies)
-    if (selectedOptions.includes("all")) {
-        showMarker = selectedRegions.includes("all") || selectedRegions.includes(marker.region);
-    } 
+   if (selectedOptions.includes("all")) {
+    showMarker = true;  // ✅ Show all clubs
+}
+
+// ✅ Apply Region Filtering Separately
+if (!selectedRegions.includes("all")) {
+    if (!marker.region || !selectedRegions.includes(marker.region)) {
+        showMarker = false;  // ✅ Hide clubs that don't match the region
+    }
+}
+
     // ✅ Step 2: Apply club size filtering only if "All Clubs" is NOT selected
     else {
         let clubSizeMatch =
@@ -370,11 +378,9 @@ function filterMarkers() {
     let showSuperBubble = false;
 
     // ✅ Step 1: If "All Regions" is selected OR the region matches, keep it visible
-    if (selectedRegions.includes("all") || selectedRegions.includes(marker.region)) {
-        showSuperBubble = true;
-    } else {
-        showSuperBubble = false; // Hide if the region filter doesn't match
-    }
+   if (selectedOptions.includes("super")) {
+    showSuperBubble = selectedRegions.includes("all") || selectedRegions.includes(marker.region);
+}
 
     // ✅ Step 2: If club filtering is active (excluding "Super Bubbles"), check if clubs in the super bubble match
     if (!selectedOptions.includes("all") && !selectedOptions.includes("super")) {
