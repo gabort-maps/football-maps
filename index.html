@@ -347,8 +347,27 @@ function filterMarkers() {
     let players = parseInt(marker.content.innerText);
     let showMarker = false;
 
-           if (selectedOptions.includes("all")) {
-    showMarker = selectedRegions.includes("all") || selectedRegions.includes(marker.region);
+          if (selectedOptions.includes("all")) {
+    showMarker = true;  // ✅ Start by showing all clubs
+}
+
+// ✅ Apply region filtering properly
+if (!selectedRegions.includes("all")) {
+    if (!marker.region || !selectedRegions.includes(marker.region)) {
+        showMarker = false;  // ✅ Hide clubs not in the selected region
+    }
+}
+
+// ✅ Apply club size filtering only if "All Clubs" is NOT selected
+if (!selectedOptions.includes("all")) {
+    let clubSizeMatch =
+        (selectedOptions.includes("large") && players > 500) ||
+        (selectedOptions.includes("medium") && players > 300 && players <= 500) ||
+        (selectedOptions.includes("small") && players > 100 && players <= 300) ||
+        (selectedOptions.includes("very-small") && players <= 100) ||
+        (selectedOptions.includes("grouped") && marker.inSuperBubble);
+
+    showMarker = showMarker && clubSizeMatch;  // ✅ Club size filter is applied correctly
 } else {
             if (selectedOptions.includes("large") && players > 500) showMarker = true;
             if (selectedOptions.includes("medium") && players > 300 && players <= 500) showMarker = true;
