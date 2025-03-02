@@ -343,8 +343,11 @@ function filterMarkers() {
     let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
 
     markers.forEach(marker => {
-        let players = parseInt(marker.content.innerText);
-        let showMarker = false;
+      markers.forEach(marker => {
+    let players = parseInt(marker.content.innerText);
+    let showMarker = false;
+
+    console.log(`Checking Marker: ${marker.title}, Players: ${players}`); // 🔹 Debugging
 
         if (selectedOptions.includes("all")) {
             showMarker = true;
