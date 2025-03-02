@@ -344,16 +344,14 @@ clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are
         }
 
         // ✅ Filtering function
-  function filterMarkers() {
+ function filterMarkers() {
     let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
     let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
-
 
     markers.forEach(marker => {
         let players = parseInt(marker.content.innerText);
         let showMarker = false;
 
-        // ✅ If "Show All" is selected, show everything
         if (selectedOptions.includes("all")) {
             showMarker = true;
         } else {
@@ -364,41 +362,35 @@ clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are
             if (selectedOptions.includes("grouped") && marker.inSuperBubble) showMarker = true;
         }
 
-        // ✅ Region filtering: Only show if the region matches, or if "All Regions" is selected
-if (!selectedRegions.includes("all")) {
-    if (!marker.region || !selectedRegions.includes(marker.region)) {
-        showMarker = false;
-    }
-}
-
-marker.map = showMarker ? window.map : null;
-
-    });
-}
-
- superBubbles.forEach(marker => {
-    let showSuperBubble = false;
-
-    // ✅ If "All Regions" is selected, show all super bubbles
-    if (selectedRegions.includes("all")) {
-        showSuperBubble = true;
-    } else {
-        // ✅ Only show Super Bubbles that match the selected regions
-        if (selectedRegions.includes(marker.region)) {
-            showSuperBubble = true;
+        if (!selectedRegions.includes("all")) {
+            if (!marker.region || !selectedRegions.includes(marker.region)) {
+                showMarker = false;
+            }
         }
-    }
 
-    marker.map = showSuperBubble ? window.map : null;
-});
-
-
-// ✅ Ensure "All Clubs" also shows individual clubs
-if (selectedOptions.includes("all")) {
-    markers.forEach(marker => {
-        marker.map = window.map;
+        marker.map = showMarker ? window.map : null;
     });
-} 
+
+    superBubbles.forEach(marker => {
+        let showSuperBubble = false;
+
+        if (selectedRegions.includes("all")) {
+            showSuperBubble = true;
+        } else {
+            if (selectedRegions.includes(marker.region)) {
+                showSuperBubble = true;
+            }
+        }
+
+        marker.map = showSuperBubble ? window.map : null;
+    });
+
+    if (selectedOptions.includes("all")) {
+        markers.forEach(marker => {
+            marker.map = window.map;
+        });
+    }
+} // <-- ✅ Make sure this closing brace is here!
 
 </script>
 
