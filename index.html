@@ -356,6 +356,7 @@ if (!selectedRegions.includes("all")) {
 marker.map = showMarker ? window.map : null;
 
     });
+}
 
   superBubbles.forEach(marker => {
     marker.map = (selectedOptions.includes("super") || selectedOptions.includes("all")) ? window.map : null;
