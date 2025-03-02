@@ -63,7 +63,30 @@
 #filter option {
     padding: 5px;
 }
+/* ✅ Style for the filter wrapper */
+#filters-wrapper {
+    display: flex;  
+    justify-content: center; /* Centers the filters */
+    gap: 15px; /* Adds spacing between filters */
+    margin: 10px 0;
+}
 
+/* ✅ Ensures each filter is properly spaced */
+.filter-box {
+    display: flex;
+    flex-direction: column; /* Keeps label above dropdown */
+    align-items: center;
+}
+
+/* ✅ Adjusts dropdown styling */
+#filter, #region-filter {
+    font-size: 12px;
+    padding: 5px;
+    width: 200px;  /* ✅ Make both filters the same width */
+    height: auto;
+    max-height: 120px;
+    overflow-y: auto;
+}
     </style>
 </head>
 <body>
