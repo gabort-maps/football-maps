@@ -273,6 +273,33 @@ Object.values(groupedLocations).forEach(group => {
 heatmapData.forEach(point => {
     console.log(`Location: (${point.location.lat()}, ${point.location.lng()}), Weight: ${point.weight}`);
 });
+// Initialize the heatmap layer
+let heatmap = new google.maps.visualization.HeatmapLayer({
+    data: heatmapData,
+    map: null, // Initially not attached to the map
+    radius: 30, // Adjust the radius for better visualization
+    opacity: 0.6 // Adjust opacity for clarity
+});
+
+// Add event listener to toggle the heatmap
+document.getElementById("heatmap-checkbox").addEventListener("change", function() {
+    if (this.checked) {
+        // Show heatmap
+        heatmap.setMap(window.map);
+
+        // Hide super bubbles and individual club markers
+        markers.forEach(marker => marker.setMap(null));
+        superBubbles.forEach(bubble => bubble.setMap(null));
+    } else {
+        // Hide heatmap
+        heatmap.setMap(null);
+
+        // Show super bubbles and individual club markers
+        markers.forEach(marker => marker.setMap(window.map));
+        superBubbles.forEach(bubble => bubble.setMap(window.map));
+    }
+});
+                
                 // ✅ Populate Club Names in the Filter
                 populateClubNames();
             })
