@@ -421,27 +421,26 @@ document.getElementById("heatmap-checkbox").addEventListener("change", function(
 
     // ✅ Filtering function
     function filterMarkers() {
-        let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
-        let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
-        let selectedClubs = Array.from(document.getElementById("club-name-filter").selectedOptions).map(opt => opt.value);
+    let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
+    let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
+    let selectedClubs = Array.from(document.getElementById("club-name-filter").selectedOptions).map(opt => opt.value);
 
-        // Step 1: Reset Filters Based on Selection
-        const clubSizeFilter = document.getElementById("filter");
-        const regionFilter = document.getElementById("region-filter");
-        const clubNameFilter = document.getElementById("club-name-filter");
+    const heatmapCheckbox = document.getElementById("heatmap-checkbox");
 
-        if (!selectedClubs.includes("all")) {
-            // If individual clubs are selected, reset club size and region filters to "All"
-            clubSizeFilter.value = "all";
-            regionFilter.value = "all";
-        }
+    if (heatmapCheckbox.checked) {
+        // Heatmap is on: Only apply region filter to the heatmap
+        const filteredHeatmapData = heatmapData.filter(point => {
+            const region = groupedLocations[`${point.location.lat()},${point.location.lng()}`]?.region;
+            return selectedRegions.includes("all") || selectedRegions.includes(region);
+        });
 
-        if (!selectedOptions.includes("all") || !selectedRegions.includes("all")) {
-            // If club size or region is filtered, reset club name filter to "All"
-            clubNameFilter.value = "all";
-        }
+        heatmap.setData(filteredHeatmapData);
 
-        // Step 2: Filter Individual Club Markers
+        // Hide all bubbles
+        markers.forEach(marker => marker.setMap(null));
+        superBubbles.forEach(bubble => bubble.setMap(null));
+    } else {
+        // Heatmap is off: Apply all filters to bubbles
         markers.forEach(marker => {
             let players = parseInt(marker.content.innerText);
             let region = marker.region;
@@ -469,14 +468,14 @@ document.getElementById("heatmap-checkbox").addEventListener("change", function(
             // Show or hide the marker based on all filters
             if (selectedClubs.includes("all")) {
                 // If "All Clubs" is selected, apply all filters
-                marker.map = clubSizeMatch && regionMatch && clubNameMatch ? window.map : null;
+                marker.setMap(clubSizeMatch && regionMatch && clubNameMatch ? window.map : null);
             } else {
                 // If individual clubs are selected, only apply the club name filter
-                marker.map = clubNameMatch ? window.map : null;
+                marker.setMap(clubNameMatch ? window.map : null);
             }
         });
 
-        // Step 3: Filter Super Bubbles
+        // Filter Super Bubbles
         superBubbles.forEach(superBubble => {
             let region = superBubble.region;
 
@@ -510,14 +509,14 @@ document.getElementById("heatmap-checkbox").addEventListener("change", function(
             // Show or hide the Super Bubble based on both filters
             if (selectedClubs.includes("all")) {
                 // If "All Clubs" is selected, apply all filters
-                superBubble.map = clubSizeMatch && regionMatch ? window.map : null;
+                superBubble.setMap(clubSizeMatch && regionMatch ? window.map : null);
             } else {
                 // If individual clubs are selected, hide Super Bubbles
-                superBubble.map = null;
+                superBubble.setMap(null);
             }
         });
     }
-
+}
     // ✅ Ensure default selections are applied when the page loads
     window.onload = function () {
         document.getElementById("filter").value = "all"; // Default: "All Clubs"
