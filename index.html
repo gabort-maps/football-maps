@@ -283,6 +283,10 @@ let heatmap = new google.maps.visualization.HeatmapLayer({
 
 // Add event listener to toggle the heatmap
 document.getElementById("heatmap-checkbox").addEventListener("change", function() {
+    const clubSizeFilter = document.getElementById("filter");
+    const regionFilter = document.getElementById("region-filter");
+    const clubNameFilter = document.getElementById("club-name-filter");
+
     if (this.checked) {
         // Show heatmap
         heatmap.setMap(window.map);
@@ -290,6 +294,11 @@ document.getElementById("heatmap-checkbox").addEventListener("change", function(
         // Hide super bubbles and individual club markers
         markers.forEach(marker => marker.setMap(null));
         superBubbles.forEach(bubble => bubble.setMap(null));
+
+        // Disable club size, region, and club name filters
+        clubSizeFilter.disabled = true;
+        regionFilter.disabled = true;
+        clubNameFilter.disabled = true;
     } else {
         // Hide heatmap
         heatmap.setMap(null);
@@ -297,6 +306,11 @@ document.getElementById("heatmap-checkbox").addEventListener("change", function(
         // Show super bubbles and individual club markers
         markers.forEach(marker => marker.setMap(window.map));
         superBubbles.forEach(bubble => bubble.setMap(window.map));
+
+        // Enable club size, region, and club name filters
+        clubSizeFilter.disabled = false;
+        regionFilter.disabled = false;
+        clubNameFilter.disabled = false;
     }
 });
                 
