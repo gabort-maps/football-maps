@@ -188,7 +188,13 @@
         if (!window.map) {
             console.error("Map failed to initialize!");
         }
-
+// Initialize the heatmap layer
+    heatmap = new google.maps.visualization.HeatmapLayer({
+        data: [], // Initially empty
+        map: null, // Initially not attached to the map
+        radius: 30, // Adjust the radius for better visualization
+        opacity: 0.6 // Adjust opacity for clarity
+    });
         // ✅ Fetch the CSV Data
         loadClubData();
     };
