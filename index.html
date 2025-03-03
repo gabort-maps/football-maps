@@ -300,7 +300,7 @@ document.getElementById("heatmap-checkbox").addEventListener("change", function(
         clubNameFilter.disabled = true;
 
         // Keep region filter enabled
-        regionFilter.disabled = false;
+        regionFilter.disabled = false; // This line was missing in the previous version
     } else {
         // Hide heatmap
         heatmap.setMap(null);
@@ -315,7 +315,8 @@ document.getElementById("heatmap-checkbox").addEventListener("change", function(
         clubNameFilter.disabled = false;
     }
 });
-                // ✅ Populate Club Names in the Filter
+                
+// ✅ Populate Club Names in the Filter
                 populateClubNames();
             })
             .catch(error => console.error("Error loading CSV:", error));
