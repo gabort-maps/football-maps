@@ -198,6 +198,44 @@
                 opacity: 0.6 // Adjust opacity for clarity
             });
 
+            // Add event listener to toggle the heatmap
+            document.getElementById("heatmap-checkbox").addEventListener("change", function() {
+                const clubSizeFilter = document.getElementById("filter");
+                const regionFilter = document.getElementById("region-filter");
+                const clubNameFilter = document.getElementById("club-name-filter");
+
+                if (this.checked) {
+                    // Show heatmap
+                    heatmap.setMap(window.map);
+
+                    // Hide super bubbles and individual club markers
+                    markers.forEach(marker => marker.setMap(null));
+                    superBubbles.forEach(bubble => bubble.setMap(null));
+
+                    // Disable club size and club name filters
+                    clubSizeFilter.disabled = true;
+                    clubNameFilter.disabled = true;
+
+                    // Keep region filter enabled
+                    regionFilter.disabled = false;
+                } else {
+                    // Hide heatmap
+                    heatmap.setMap(null);
+
+                    // Show super bubbles and individual club markers
+                    markers.forEach(marker => marker.setMap(window.map));
+                    superBubbles.forEach(bubble => bubble.setMap(window.map));
+
+                    // Enable all filters
+                    clubSizeFilter.disabled = false;
+                    regionFilter.disabled = false;
+                    clubNameFilter.disabled = false;
+                }
+
+                // Apply filtering immediately
+                filterMarkers();
+            });
+
             // ✅ Fetch the CSV Data
             loadClubData();
         };
