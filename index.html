@@ -266,9 +266,8 @@ heatmap = new google.maps.visualization.HeatmapLayer({
                     createClubMarkers(group); // ✅ Always create club markers
                 });
 // Prepare heatmap data
-let heatmapData = [];
+heatmapData = []; // Reset heatmap data
 
-// Add individual clubs (not in super bubbles)
 Object.values(groupedLocations).forEach(group => {
     if (group.clubs.length === 1) { // Individual clubs
         heatmapData.push({
@@ -282,6 +281,8 @@ Object.values(groupedLocations).forEach(group => {
         });
     }
 });
+
+console.log("Heatmap Data:", heatmapData); // Debugging: Check the heatmap data
 
 // Debugging: Log heatmap data with lat, lng, and weight
 heatmapData.forEach(point => {
