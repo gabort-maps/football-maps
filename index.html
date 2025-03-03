@@ -449,7 +449,7 @@ document.getElementById("heatmap-checkbox").addEventListener("change", function(
             const region = groupedLocations[`${point.location.lat()},${point.location.lng()}`]?.region;
             return selectedRegions.includes("all") || selectedRegions.includes(region);
         });
-
+ console.log("Filtered Heatmap Data:", filteredHeatmapData); // Debugging: Log the filtered heatmap data
         heatmap.setData(filteredHeatmapData);
 
         // Hide all bubbles
