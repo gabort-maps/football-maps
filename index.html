@@ -4,102 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Clubs Map</title>
-   <style>
-    /* 🔹 Reset default margins and padding */
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden;
-    }
-
-    /* 🔹 Map Container */
-    #map {
-        height: 100vh;
-        width: 100%;
-    }
-
-    /* 🔹 Filters Wrapper */
-    #filters-wrapper {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin: 10px 0;
-        padding: 4px;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        position: absolute;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1000;
-    }
-
-    /* 🔹 Styling for Each Filter Box */
-    .filter-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2px; /* Minimal space between label and dropdown */
-    }
-
-    /* 🔹 Styling for Labels */
-    .filter-box label {
-        font-size: 12px;
-        font-weight: 600;
-        color: #333;
-    }
-
-    /* 🔹 Styling for Dropdowns */
-    #filter, #region-filter, #club-name-filter {
-        font-size: 12px;
-        padding: 4px 8px;
-        width: 180px; /* Reduced width for mobile compatibility */
-        border: 1px solid #ced4da;
-        border-radius: 5px;
-        background-color: #fff;
-        color: #495057;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    /* 🔹 Hover Effect for Dropdowns */
-    #filter:hover, #region-filter:hover, #club-name-filter:hover {
-        border-color: #80bdff;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
-    }
-
-    /* 🔹 Focus Effect for Dropdowns */
-    #filter:focus, #region-filter:focus, #club-name-filter:focus {
-        border-color: #80bdff;
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-    }
-
-    /* 🔹 Styling for Dropdown Options */
-    #filter option, #region-filter option, #club-name-filter option {
-        font-size: 12px;
-        padding: 6px;
-        background-color: #fff;
-        color: #333;
-    }
-
-    /* 🔹 Styling for Multiple Selected Options */
-    #filter[multiple] option:checked, #region-filter[multiple] option:checked, #club-name-filter[multiple] option:checked {
-        background-color: #007bff;
-        color: #fff;
-    }
-
-    /* 🔹 Responsive Positioning for Mobile */
-    @media (max-width: 768px) {
-        div[style*="position: fixed; top: 10px; right: 10px;"] {
-            top: auto;
-            bottom: 10px;
-            right: 10px;
+    <style>
+        /* 🔹 Reset default margins and padding */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
         }
-    }
-</style>
+
+        /* 🔹 Map Container */
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* 🔹 Filters Wrapper */
+        #filters-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0;
+            padding: 4px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        /* 🔹 Styling for Each Filter Box */
+        .filter-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px; /* Minimal space between label and dropdown */
+        }
+
+        /* 🔹 Styling for Labels */
+        .filter-box label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* 🔹 Styling for Dropdowns */
+        #filter, #region-filter, #club-name-filter {
+            font-size: 12px;
+            padding: 4px 8px;
+            width: 180px; /* Reduced width for mobile compatibility */
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* 🔹 Hover Effect for Dropdowns */
+        #filter:hover, #region-filter:hover, #club-name-filter:hover {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+        }
+
+        /* 🔹 Focus Effect for Dropdowns */
+        #filter:focus, #region-filter:focus, #club-name-filter:focus {
+            border-color: #80bdff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        /* 🔹 Styling for Dropdown Options */
+        #filter option, #region-filter option, #club-name-filter option {
+            font-size: 12px;
+            padding: 6px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        /* 🔹 Styling for Multiple Selected Options */
+        #filter[multiple] option:checked, #region-filter[multiple] option:checked, #club-name-filter[multiple] option:checked {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* 🔹 Responsive Positioning for Mobile */
+        @media (max-width: 768px) {
+            div[style*="position: fixed; top: 10px; right: 10px;"] {
+                top: auto;
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- 🔹 FILTER DROPDOWN -->
@@ -108,7 +108,7 @@
         <div class="filter-box">
             <label for="filter">Club Size:</label>
             <select id="filter" multiple onchange="filterMarkers()">
-                <option value="all">All Clubs</option>
+                <option value="all" selected>All Clubs</option>
                 <option value="super">Super Bubbles</option>
                 <option value="large">Large Clubs (500+ Players)</option>
                 <option value="medium">Medium Clubs (300-500 Players)</option>
@@ -117,13 +117,7 @@
                 <option value="grouped">Only Clubs in Super Bubbles</option>
             </select>
         </div>
-       
-<!-- Place this code inside the <body> tag, just below the filters-wrapper -->
-<div id="heatmap-toggle" style="position: absolute; top: 10px; left: calc(50% + 320px); z-index: 1000; background: rgba(255, 255, 255, 0.8); padding: 8px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-    <label style="font-size: 12px; color: #333; display: flex; align-items: center; gap: 5px;">
-        <input type="checkbox" id="heatmap-checkbox"> Show Heatmap
-    </label>
-</div>
+
         <!-- Region Filter -->
         <div class="filter-box">
             <label for="region-filter">Region:</label>
@@ -144,6 +138,13 @@
         </div>
     </div>
 
+    <!-- 🔹 Heatmap Toggle -->
+    <div id="heatmap-toggle" style="position: absolute; top: 10px; left: calc(50% + 320px); z-index: 1000; background: rgba(255, 255, 255, 0.8); padding: 8px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <label style="font-size: 12px; color: #333; display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox" id="heatmap-checkbox"> Show Heatmap
+        </label>
+    </div>
+
     <!-- 🔹 MAP CONTAINER -->
     <div id="map"></div>
 
@@ -156,408 +157,364 @@
         </div>
     </div>
 
-   <script>
-    let markers = []; // Stores all individual club markers
-    let superBubbles = []; // Stores all super bubble markers
-    let groupedLocations = {}; // Stores grouped club locations
-    let heatmapData = []; // Stores heatmap data points  
-    let heatmap; // Stores the heatmap layer
+    <script>
+        let markers = []; // Stores all individual club markers
+        let superBubbles = []; // Stores all super bubble markers
+        let groupedLocations = {}; // Stores grouped club locations
+        let heatmapData = []; // Stores heatmap data points
+        let heatmap; // Stores the heatmap layer
 
-    // ✅ Haversine formula to calculate distance between two lat/lng points
-    function haversineDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371; // Radius of Earth in km
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c; // Distance in km
-    }
-
-    // ✅ Initialize the Map
-    window.initMap = function() {
-        console.log("Google Maps API loaded successfully and `initMap` is running!");
-
-        window.map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 11,
-            center: { lat: 41.58326109938572, lng: 2.1728172154905083 }, // ✅ Updated center
-            mapId: "6d21538ba521f729"
-        });
-
-        if (!window.map) {
-            console.error("Map failed to initialize!");
+        // ✅ Haversine formula to calculate distance between two lat/lng points
+        function haversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of Earth in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c; // Distance in km
         }
-// Initialize the heatmap layer
-    heatmap = new google.maps.visualization.HeatmapLayer({
-        data: [], // Initially empty
-        map: null, // Initially not attached to the map
-        radius: 30, // Adjust the radius for better visualization
-        opacity: 0.6 // Adjust opacity for clarity
-    });
-        // ✅ Fetch the CSV Data
-        loadClubData();
-    };
-// Initialize the heatmap layer
-heatmap = new google.maps.visualization.HeatmapLayer({
-    data: [], // Initially empty
-    map: null, // Initially not attached to the map
-    radius: 30, // Adjust the radius for better visualization
-    opacity: 0.6 // Adjust opacity for clarity
-});
-    // ✅ Fetch Data from CSV and Add Markers
-    function loadClubData() {
-        fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
-            .then(response => response.text())
-            .then(data => {
-                console.log("CSV File Loaded Successfully!");
-                console.log(data); // ✅ Log the CSV content
 
-                const rows = data.split("\n").slice(1); // Remove header
-                rows.forEach(row => {
-                    const columns = row.split(",");
-                    if (columns.length >= 4) {
-                        const name = columns[0].trim();
-                        const region = columns[1].trim();
-                        const lat = parseFloat(columns[2]);
-                        const lng = parseFloat(columns[3]);
-                        const players = parseInt(columns[4]);
+        // ✅ Initialize the Map
+        window.initMap = function() {
+            console.log("Google Maps API loaded successfully and `initMap` is running!");
 
-                        if (isNaN(lat) || isNaN(lng) || isNaN(players)) {
-                            console.warn(`Skipping invalid row: ${row}`);
-                            return; // Skip invalid rows
-                        }
-
-                        // ✅ Group clubs within 250 meters
-                        let foundGroup = null;
-                        for (let existingKey in groupedLocations) {
-                            let existingGroup = groupedLocations[existingKey];
-                            let distance = haversineDistance(lat, lng, existingGroup.lat, existingGroup.lng);
-
-                            if (distance <= 0.25) { // ✅ If within 250m, group them together
-                                foundGroup = existingGroup;
-                                break;
-                            }
-                        }
-
-                        // ✅ If a group is found, add the club to it
-                        if (foundGroup) {
-                            foundGroup.clubs.push({ name, players, region });
-                            foundGroup.totalPlayers += players;
-                        } else {
-                            groupedLocations[`${lat},${lng}`] = {
-                                lat,
-                                lng,
-                                totalPlayers: players,
-                                clubs: [{ name, players, region }],
-                                region: region
-                            };
-                        }
-                    }
-                });
-
-                console.log("Grouped Locations:", groupedLocations); // ✅ Debugging check
-
-                // ✅ Create Markers for Both Super Bubbles and Individual Clubs
-                Object.values(groupedLocations).forEach(group => {
-                    if (group.clubs.length > 1) { // ✅ Only create a Super Bubble if more than 1 club is at this location
-                        createSuperBubble(group);
-                    }
-                    createClubMarkers(group); // ✅ Always create club markers
-                });
-// Prepare heatmap data
-heatmapData = []; // Reset heatmap data
-
-Object.values(groupedLocations).forEach(group => {
-    if (group.clubs.length === 1) { // Individual clubs
-        heatmapData.push({
-            location: new google.maps.LatLng(group.lat, group.lng),
-            weight: group.totalPlayers // Use player count as weight
-        });
-    } else { // Super bubbles
-        heatmapData.push({
-            location: new google.maps.LatLng(group.lat, group.lng),
-            weight: group.totalPlayers // Use total player count of the super bubble
-        });
-    }
-});
-
-console.log("Heatmap Data:", heatmapData); // Debugging: Check the heatmap data
-
-// Debugging: Log heatmap data with lat, lng, and weight
-heatmapData.forEach(point => {
-    console.log(`Location: (${point.location.lat()}, ${point.location.lng()}), Weight: ${point.weight}`);
-});
-// Initialize the heatmap layer
-let heatmap = new google.maps.visualization.HeatmapLayer({
-    data: heatmapData,
-    map: null, // Initially not attached to the map
-    radius: 30, // Adjust the radius for better visualization
-    opacity: 0.6 // Adjust opacity for clarity
-});
-
-// Add event listener to toggle the heatmap
-document.getElementById("heatmap-checkbox").addEventListener("change", function() {
-    const clubSizeFilter = document.getElementById("filter");
-    const regionFilter = document.getElementById("region-filter");
-    const clubNameFilter = document.getElementById("club-name-filter");
-
-    if (this.checked) {
-        // Show heatmap
-        heatmap.setMap(window.map);
-
-        // Hide super bubbles and individual club markers
-        markers.forEach(marker => marker.setMap(null));
-        superBubbles.forEach(bubble => bubble.setMap(null));
-
-        // Disable club size and club name filters
-        clubSizeFilter.disabled = true;
-        clubNameFilter.disabled = true;
-
-        // Keep region filter enabled
-        regionFilter.disabled = false; // This line was missing in the previous version
-    } else {
-        // Hide heatmap
-        heatmap.setMap(null);
-
-        // Show super bubbles and individual club markers
-        markers.forEach(marker => marker.setMap(window.map));
-        superBubbles.forEach(bubble => bubble.setMap(window.map));
-
-        // Enable all filters
-        clubSizeFilter.disabled = false;
-        regionFilter.disabled = false;
-        clubNameFilter.disabled = false;
-    }
-});
-                
-// ✅ Populate Club Names in the Filter
-                populateClubNames();
-            })
-            .catch(error => console.error("Error loading CSV:", error));
-    }
-
-    // ✅ Function to Create Super Bubbles
-    function createSuperBubble(group) {
-        let clubNames = group.clubs.map(c => `${c.name}: ${c.players} players`).join("<br>");
-
-        let superBubbleSize = Math.min(100, 40 + group.totalPlayers / 30);
-        let superBubble = document.createElement("div");
-        superBubble.style.width = superBubbleSize + "px";
-        superBubble.style.height = superBubbleSize + "px";
-        superBubble.style.borderRadius = "50%";
-        superBubble.style.backgroundColor = "rgba(211, 211, 211, 0.8)"; // ✅ Semi-transparent gray
-        superBubble.style.display = "flex";
-        superBubble.style.justifyContent = "center";
-        superBubble.style.alignItems = "center";
-        superBubble.style.color = "black";
-        superBubble.style.fontWeight = "bold";
-        superBubble.style.border = "2px solid white";
-        superBubble.innerText = group.totalPlayers;
-
-        // ✅ Attach the region as a dataset attribute
-        superBubble.dataset.region = group.region || "Unknown";
-
-        const superMarker = new google.maps.marker.AdvancedMarkerElement({
-            position: { lat: group.lat - 0.0003, lng: group.lng - 0.0003 },
-            title: "Super Bubble",
-            content: superBubble,
-            zIndex: 1
-        });
-
-        // ✅ Store the region inside the marker
-        superMarker.region = superBubble.dataset.region;
-
-        // ✅ Attach the marker to the map
-        superMarker.map = window.map;
-
-        let infoWindow = new google.maps.InfoWindow({
-            content: `<div style="text-align:center;">
-                        <strong>Football Field</strong><br>${clubNames}
-                      </div>`
-        });
-
-        superBubble.addEventListener("click", () => {
-            infoWindow.open(window.map, superMarker);
-        });
-
-        // ✅ Add marker to `superBubbles` array
-        superBubbles.push(superMarker);
-    }
-
-    // ✅ Function to Create Individual Club Markers
-    function createClubMarkers(group) {
-        group.clubs.forEach((club, index) => {
-            let clubLat = group.lat + (index * 0.0002); // Small shift to separate markers
-            let clubLng = group.lng + (index * 0.0002);
-
-            let clubBubbleSize = Math.min(80, 30 + club.players / 20);
-            let clubBubble = document.createElement("div");
-            clubBubble.style.width = clubBubbleSize + "px";
-            clubBubble.style.height = clubBubbleSize + "px";
-            clubBubble.style.borderRadius = "50%";
-            clubBubble.style.backgroundColor = getColorForPlayers(club.players);
-            clubBubble.style.display = "flex";
-            clubBubble.style.justifyContent = "center";
-            clubBubble.style.alignItems = "center";
-            clubBubble.style.color = "white";
-            clubBubble.style.fontWeight = "bold";
-            clubBubble.style.border = "2px solid white";
-            clubBubble.innerText = club.players;
-
-            let clubMarker = new google.maps.marker.AdvancedMarkerElement({
-                position: { lat: clubLat, lng: clubLng },
-                title: club.name,
-                content: clubBubble
+            window.map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 11,
+                center: { lat: 41.58326109938572, lng: 2.1728172154905083 }, // ✅ Updated center
+                mapId: "6d21538ba521f729"
             });
 
-            clubMarker.region = group.region; // ✅ Assign region to the marker
-            clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are grouped
+            if (!window.map) {
+                console.error("Map failed to initialize!");
+            }
 
-            clubMarker.map = window.map;
+            // Initialize the heatmap layer
+            heatmap = new google.maps.visualization.HeatmapLayer({
+                data: [], // Initially empty
+                map: null, // Initially not attached to the map
+                radius: 30, // Adjust the radius for better visualization
+                opacity: 0.6 // Adjust opacity for clarity
+            });
 
-            let clubInfoWindow = new google.maps.InfoWindow({
+            // ✅ Fetch the CSV Data
+            loadClubData();
+        };
+
+        // ✅ Fetch Data from CSV and Add Markers
+        function loadClubData() {
+            fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
+                .then(response => response.text())
+                .then(data => {
+                    console.log("CSV File Loaded Successfully!");
+                    console.log(data); // ✅ Log the CSV content
+
+                    const rows = data.split("\n").slice(1); // Remove header
+                    rows.forEach(row => {
+                        const columns = row.split(",");
+                        if (columns.length >= 4) {
+                            const name = columns[0].trim();
+                            const region = columns[1].trim();
+                            const lat = parseFloat(columns[2]);
+                            const lng = parseFloat(columns[3]);
+                            const players = parseInt(columns[4]);
+
+                            if (isNaN(lat) || isNaN(lng) || isNaN(players)) {
+                                console.warn(`Skipping invalid row: ${row}`);
+                                return; // Skip invalid rows
+                            }
+
+                            // ✅ Group clubs within 250 meters
+                            let foundGroup = null;
+                            for (let existingKey in groupedLocations) {
+                                let existingGroup = groupedLocations[existingKey];
+                                let distance = haversineDistance(lat, lng, existingGroup.lat, existingGroup.lng);
+
+                                if (distance <= 0.25) { // ✅ If within 250m, group them together
+                                    foundGroup = existingGroup;
+                                    break;
+                                }
+                            }
+
+                            // ✅ If a group is found, add the club to it
+                            if (foundGroup) {
+                                foundGroup.clubs.push({ name, players, region });
+                                foundGroup.totalPlayers += players;
+                            } else {
+                                groupedLocations[`${lat},${lng}`] = {
+                                    lat,
+                                    lng,
+                                    totalPlayers: players,
+                                    clubs: [{ name, players, region }],
+                                    region: region // Add region to the group
+                                };
+                            }
+                        }
+                    });
+
+                    console.log("Grouped Locations:", groupedLocations); // ✅ Debugging check
+
+                    // ✅ Create Markers for Both Super Bubbles and Individual Clubs
+                    Object.values(groupedLocations).forEach(group => {
+                        if (group.clubs.length > 1) { // ✅ Only create a Super Bubble if more than 1 club is at this location
+                            createSuperBubble(group);
+                        }
+                        createClubMarkers(group); // ✅ Always create club markers
+                    });
+
+                    // Prepare heatmap data
+                    heatmapData = []; // Reset heatmap data
+
+                    Object.values(groupedLocations).forEach(group => {
+                        if (group.clubs.length === 1) { // Individual clubs
+                            heatmapData.push({
+                                location: new google.maps.LatLng(group.lat, group.lng),
+                                weight: group.totalPlayers // Use player count as weight
+                            });
+                        } else { // Super bubbles
+                            heatmapData.push({
+                                location: new google.maps.LatLng(group.lat, group.lng),
+                                weight: group.totalPlayers // Use total player count of the super bubble
+                            });
+                        }
+                    });
+
+                    console.log("Heatmap Data:", heatmapData); // Debugging: Check the heatmap data
+
+                    // Update the heatmap with the new data
+                    heatmap.setData(heatmapData);
+
+                    // ✅ Populate Club Names in the Filter
+                    populateClubNames();
+                })
+                .catch(error => console.error("Error loading CSV:", error));
+        }
+
+        // ✅ Function to Create Super Bubbles
+        function createSuperBubble(group) {
+            let clubNames = group.clubs.map(c => `${c.name}: ${c.players} players`).join("<br>");
+
+            let superBubbleSize = Math.min(100, 40 + group.totalPlayers / 30);
+            let superBubble = document.createElement("div");
+            superBubble.style.width = superBubbleSize + "px";
+            superBubble.style.height = superBubbleSize + "px";
+            superBubble.style.borderRadius = "50%";
+            superBubble.style.backgroundColor = "rgba(211, 211, 211, 0.8)"; // ✅ Semi-transparent gray
+            superBubble.style.display = "flex";
+            superBubble.style.justifyContent = "center";
+            superBubble.style.alignItems = "center";
+            superBubble.style.color = "black";
+            superBubble.style.fontWeight = "bold";
+            superBubble.style.border = "2px solid white";
+            superBubble.innerText = group.totalPlayers;
+
+            // ✅ Attach the region as a dataset attribute
+            superBubble.dataset.region = group.region || "Unknown";
+
+            const superMarker = new google.maps.marker.AdvancedMarkerElement({
+                position: { lat: group.lat - 0.0003, lng: group.lng - 0.0003 },
+                title: "Super Bubble",
+                content: superBubble,
+                zIndex: 1
+            });
+
+            // ✅ Store the region inside the marker
+            superMarker.region = superBubble.dataset.region;
+
+            // ✅ Attach the marker to the map
+            superMarker.map = window.map;
+
+            let infoWindow = new google.maps.InfoWindow({
                 content: `<div style="text-align:center;">
-                            <strong>${club.name}</strong><br>Players: ${club.players}
+                            <strong>Football Field</strong><br>${clubNames}
                           </div>`
             });
 
-            clubBubble.addEventListener("click", () => {
-                clubInfoWindow.open(window.map, clubMarker);
+            superBubble.addEventListener("click", () => {
+                infoWindow.open(window.map, superMarker);
             });
 
-            markers.push(clubMarker);
-        });
-    }
+            // ✅ Add marker to `superBubbles` array
+            superBubbles.push(superMarker);
+        }
 
-    // ✅ Helper function to get color based on player count
-    function getColorForPlayers(players) {
-        if (players > 500) return "red"; // Large clubs
-        if (players > 300) return "purple"; // Medium clubs
-        if (players > 100) return "green"; // Small clubs
-        return "blue"; // Very small clubs
-    }
+        // ✅ Function to Create Individual Club Markers
+        function createClubMarkers(group) {
+            group.clubs.forEach((club, index) => {
+                let clubLat = group.lat + (index * 0.0002); // Small shift to separate markers
+                let clubLng = group.lng + (index * 0.0002);
 
-    // ✅ Function to Populate Club Names
-    function populateClubNames() {
-        const clubNameFilter = document.getElementById("club-name-filter");
-        markers.forEach(marker => {
-            const clubName = marker.title;
-            const option = document.createElement("option");
-            option.value = clubName;
-            option.text = clubName;
-            clubNameFilter.appendChild(option);
-        });
-    }
+                let clubBubbleSize = Math.min(80, 30 + club.players / 20);
+                let clubBubble = document.createElement("div");
+                clubBubble.style.width = clubBubbleSize + "px";
+                clubBubble.style.height = clubBubbleSize + "px";
+                clubBubble.style.borderRadius = "50%";
+                clubBubble.style.backgroundColor = getColorForPlayers(club.players);
+                clubBubble.style.display = "flex";
+                clubBubble.style.justifyContent = "center";
+                clubBubble.style.alignItems = "center";
+                clubBubble.style.color = "white";
+                clubBubble.style.fontWeight = "bold";
+                clubBubble.style.border = "2px solid white";
+                clubBubble.innerText = club.players;
 
-    // ✅ Filtering function
-  function filterMarkers() {
-    let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
-    let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
-    let selectedClubs = Array.from(document.getElementById("club-name-filter").selectedOptions).map(opt => opt.value);
+                let clubMarker = new google.maps.marker.AdvancedMarkerElement({
+                    position: { lat: clubLat, lng: clubLng },
+                    title: club.name,
+                    content: clubBubble
+                });
 
-    const heatmapCheckbox = document.getElementById("heatmap-checkbox");
+                clubMarker.region = group.region; // ✅ Assign region to the marker
+                clubMarker.inSuperBubble = (group.clubs.length > 1); // ✅ Marks clubs that are grouped
 
-    if (heatmapCheckbox.checked) {
-        // Heatmap is on: Filter the heatmap based on the selected region(s)
-        const filteredHeatmapData = heatmapData.filter(point => {
-            const region = groupedLocations[`${point.location.lat()},${point.location.lng()}`]?.region;
-            return selectedRegions.includes("all") || selectedRegions.includes(region);
-        });
- console.log("Filtered Heatmap Data:", filteredHeatmapData); // Debugging: Log the filtered heatmap data
-        heatmap.setData(filteredHeatmapData);
+                clubMarker.map = window.map;
 
-        // Hide all bubbles
-        markers.forEach(marker => marker.setMap(null));
-        superBubbles.forEach(bubble => bubble.setMap(null));
-    } else {
-        // Heatmap is off: Apply all filters to bubbles
-        markers.forEach(marker => {
-            let players = parseInt(marker.content.innerText);
-            let region = marker.region;
-            let clubName = marker.title;
+                let clubInfoWindow = new google.maps.InfoWindow({
+                    content: `<div style="text-align:center;">
+                                <strong>${club.name}</strong><br>Players: ${club.players}
+                              </div>`
+                });
 
-            // Check if the marker matches the club size filter
-            let clubSizeMatch =
-                selectedOptions.includes("all") || // "All Clubs" is selected
-                (selectedOptions.includes("large") && players > 500) ||
-                (selectedOptions.includes("medium") && players > 300 && players <= 500) ||
-                (selectedOptions.includes("small") && players > 100 && players <= 300) ||
-                (selectedOptions.includes("very-small") && players <= 100) ||
-                (selectedOptions.includes("grouped") && marker.inSuperBubble);
+                clubBubble.addEventListener("click", () => {
+                    clubInfoWindow.open(window.map, clubMarker);
+                });
 
-            // Check if the marker matches the region filter
-            let regionMatch =
-                selectedRegions.includes("all") || // "All Regions" is selected
-                selectedRegions.includes(region);
+                markers.push(clubMarker);
+            });
+        }
 
-            // Check if the marker matches the club name filter
-            let clubNameMatch =
-                selectedClubs.includes("all") || // "All Clubs" is selected
-                selectedClubs.includes(clubName);
+        // ✅ Helper function to get color based on player count
+        function getColorForPlayers(players) {
+            if (players > 500) return "red"; // Large clubs
+            if (players > 300) return "purple"; // Medium clubs
+            if (players > 100) return "green"; // Small clubs
+            return "blue"; // Very small clubs
+        }
 
-            // Show or hide the marker based on all filters
-            if (selectedClubs.includes("all")) {
-                // If "All Clubs" is selected, apply all filters
-                marker.setMap(clubSizeMatch && regionMatch && clubNameMatch ? window.map : null);
+        // ✅ Function to Populate Club Names
+        function populateClubNames() {
+            const clubNameFilter = document.getElementById("club-name-filter");
+            markers.forEach(marker => {
+                const clubName = marker.title;
+                const option = document.createElement("option");
+                option.value = clubName;
+                option.text = clubName;
+                clubNameFilter.appendChild(option);
+            });
+        }
+
+        // ✅ Filtering function
+        function filterMarkers() {
+            let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
+            let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
+            let selectedClubs = Array.from(document.getElementById("club-name-filter").selectedOptions).map(opt => opt.value);
+
+            const heatmapCheckbox = document.getElementById("heatmap-checkbox");
+
+            if (heatmapCheckbox.checked) {
+                // Heatmap is on: Filter the heatmap based on the selected region(s)
+                const filteredHeatmapData = heatmapData.filter(point => {
+                    const group = groupedLocations[`${point.location.lat()},${point.location.lng()}`];
+                    const region = group?.region;
+                    return selectedRegions.includes("all") || selectedRegions.includes(region);
+                });
+
+                console.log("Filtered Heatmap Data:", filteredHeatmapData); // Debugging: Log the filtered heatmap data
+                heatmap.setData(filteredHeatmapData);
+
+                // Hide all bubbles
+                markers.forEach(marker => marker.setMap(null));
+                superBubbles.forEach(bubble => bubble.setMap(null));
             } else {
-                // If individual clubs are selected, only apply the club name filter
-                marker.setMap(clubNameMatch ? window.map : null);
+                // Heatmap is off: Apply all filters to bubbles
+                markers.forEach(marker => {
+                    let players = parseInt(marker.content.innerText);
+                    let region = marker.region;
+                    let clubName = marker.title;
+
+                    // Check if the marker matches the club size filter
+                    let clubSizeMatch =
+                        selectedOptions.includes("all") || // "All Clubs" is selected
+                        (selectedOptions.includes("large") && players > 500) ||
+                        (selectedOptions.includes("medium") && players > 300 && players <= 500) ||
+                        (selectedOptions.includes("small") && players > 100 && players <= 300) ||
+                        (selectedOptions.includes("very-small") && players <= 100) ||
+                        (selectedOptions.includes("grouped") && marker.inSuperBubble);
+
+                    // Check if the marker matches the region filter
+                    let regionMatch =
+                        selectedRegions.includes("all") || // "All Regions" is selected
+                        selectedRegions.includes(region);
+
+                    // Check if the marker matches the club name filter
+                    let clubNameMatch =
+                        selectedClubs.includes("all") || // "All Clubs" is selected
+                        selectedClubs.includes(clubName);
+
+                    // Show or hide the marker based on all filters
+                    if (selectedClubs.includes("all")) {
+                        // If "All Clubs" is selected, apply all filters
+                        marker.setMap(clubSizeMatch && regionMatch && clubNameMatch ? window.map : null);
+                    } else {
+                        // If individual clubs are selected, only apply the club name filter
+                        marker.setMap(clubNameMatch ? window.map : null);
+                    }
+                });
+
+                // Filter Super Bubbles
+                superBubbles.forEach(superBubble => {
+                    let region = superBubble.region;
+
+                    // Check if the Super Bubble matches the region filter
+                    let regionMatch =
+                        selectedRegions.includes("all") || // "All Regions" is selected
+                        selectedRegions.includes(region);
+
+                    // Check if the Super Bubble should be shown based on club size filter
+                    let clubSizeMatch = false; // Assume it doesn't match by default
+
+                    if (selectedOptions.includes("all") || selectedOptions.includes("super")) {
+                        // Show Super Bubbles if "All Clubs" or "Super Bubbles" is selected
+                        clubSizeMatch = true;
+                    } else if (!selectedOptions.includes("super")) {
+                        // If "Super Bubbles" is NOT selected, check if any club in the Super Bubble matches the club size filter
+                        let group = Object.values(groupedLocations).find(g =>
+                            g.lat === superBubble.position.lat && g.lng === superBubble.position.lng
+                        );
+
+                        if (group) {
+                            clubSizeMatch = group.clubs.some(club =>
+                                (selectedOptions.includes("large") && club.players > 500) ||
+                                (selectedOptions.includes("medium") && club.players > 300 && club.players <= 500) ||
+                                (selectedOptions.includes("small") && club.players > 100 && club.players <= 300) ||
+                                (selectedOptions.includes("very-small") && club.players <= 100)
+                            );
+                        }
+                    }
+
+                    // Show or hide the Super Bubble based on both filters
+                    if (selectedClubs.includes("all")) {
+                        // If "All Clubs" is selected, apply all filters
+                        superBubble.setMap(clubSizeMatch && regionMatch ? window.map : null);
+                    } else {
+                        // If individual clubs are selected, hide Super Bubbles
+                        superBubble.setMap(null);
+                    }
+                });
             }
-        });
+        }
 
-        // Filter Super Bubbles
-        superBubbles.forEach(superBubble => {
-            let region = superBubble.region;
-
-            // Check if the Super Bubble matches the region filter
-            let regionMatch =
-                selectedRegions.includes("all") || // "All Regions" is selected
-                selectedRegions.includes(region);
-
-            // Check if the Super Bubble should be shown based on club size filter
-            let clubSizeMatch = false; // Assume it doesn't match by default
-
-            if (selectedOptions.includes("all") || selectedOptions.includes("super")) {
-                // Show Super Bubbles if "All Clubs" or "Super Bubbles" is selected
-                clubSizeMatch = true;
-            } else if (!selectedOptions.includes("super")) {
-                // If "Super Bubbles" is NOT selected, check if any club in the Super Bubble matches the club size filter
-                let group = Object.values(groupedLocations).find(g =>
-                    g.lat === superBubble.position.lat && g.lng === superBubble.position.lng
-                );
-
-                if (group) {
-                    clubSizeMatch = group.clubs.some(club =>
-                        (selectedOptions.includes("large") && club.players > 500) ||
-                        (selectedOptions.includes("medium") && club.players > 300 && club.players <= 500) ||
-                        (selectedOptions.includes("small") && club.players > 100 && club.players <= 300) ||
-                        (selectedOptions.includes("very-small") && club.players <= 100)
-                    );
-                }
-            }
-
-            // Show or hide the Super Bubble based on both filters
-            if (selectedClubs.includes("all")) {
-                // If "All Clubs" is selected, apply all filters
-                superBubble.setMap(clubSizeMatch && regionMatch ? window.map : null);
-            } else {
-                // If individual clubs are selected, hide Super Bubbles
-                superBubble.setMap(null);
-            }
-        });
-    }
-}
-    // ✅ Ensure default selections are applied when the page loads
-    window.onload = function () {
-        document.getElementById("filter").value = "all"; // Default: "All Clubs"
-        document.getElementById("region-filter").value = "all"; // Default: "All Regions"
-        document.getElementById("club-name-filter").value = "all"; // Default: "All Clubs"
-        filterMarkers(); // ✅ Apply filtering immediately
-    };
-</script>
+        // ✅ Ensure default selections are applied when the page loads
+        window.onload = function () {
+            document.getElementById("filter").value = "all"; // Default: "All Clubs"
+            document.getElementById("region-filter").value = "all"; // Default: "All Regions"
+            document.getElementById("club-name-filter").value = "all"; // Default: "All Clubs"
+            filterMarkers(); // ✅ Apply filtering immediately
+        };
+    </script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXOfD-urA6wwow_1mz0O-bSJ9PjwXylhQ&callback=initMap&libraries=visualization,marker">
-</script>
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXOfD-urA6wwow_1mz0O-bSJ9PjwXylhQ&callback=initMap&libraries=visualization,marker">
+    </script>
 </body>
 </html>
