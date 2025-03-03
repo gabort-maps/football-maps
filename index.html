@@ -251,7 +251,25 @@
                     }
                     createClubMarkers(group); // ✅ Always create club markers
                 });
+// Prepare heatmap data
+let heatmapData = [];
 
+// Add individual clubs (not in super bubbles)
+Object.values(groupedLocations).forEach(group => {
+    if (group.clubs.length === 1) { // Individual clubs
+        heatmapData.push({
+            location: new google.maps.LatLng(group.lat, group.lng),
+            weight: group.totalPlayers // Use player count as weight
+        });
+    } else { // Super bubbles
+        heatmapData.push({
+            location: new google.maps.LatLng(group.lat, group.lng),
+            weight: group.totalPlayers // Use total player count of the super bubble
+        });
+    }
+});
+
+console.log("Heatmap Data:", heatmapData); // Debugging: Check the heatmap data
                 // ✅ Populate Club Names in the Filter
                 populateClubNames();
             })
