@@ -436,7 +436,7 @@ document.getElementById("heatmap-checkbox").addEventListener("change", function(
     }
 
     // ✅ Filtering function
-    function filterMarkers() {
+  function filterMarkers() {
     let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
     let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
     let selectedClubs = Array.from(document.getElementById("club-name-filter").selectedOptions).map(opt => opt.value);
@@ -444,7 +444,7 @@ document.getElementById("heatmap-checkbox").addEventListener("change", function(
     const heatmapCheckbox = document.getElementById("heatmap-checkbox");
 
     if (heatmapCheckbox.checked) {
-        // Heatmap is on: Only apply region filter to the heatmap
+        // Heatmap is on: Filter the heatmap based on the selected region(s)
         const filteredHeatmapData = heatmapData.filter(point => {
             const region = groupedLocations[`${point.location.lat()},${point.location.lng()}`]?.region;
             return selectedRegions.includes("all") || selectedRegions.includes(region);
