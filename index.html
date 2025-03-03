@@ -161,6 +161,7 @@
     let superBubbles = []; // Stores all super bubble markers
     let groupedLocations = {}; // Stores grouped club locations
     let heatmapData = []; // Stores heatmap data points  
+    let heatmap; // Stores the heatmap layer
 
     // ✅ Haversine formula to calculate distance between two lat/lng points
     function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -191,7 +192,13 @@
         // ✅ Fetch the CSV Data
         loadClubData();
     };
-
+// Initialize the heatmap layer
+heatmap = new google.maps.visualization.HeatmapLayer({
+    data: [], // Initially empty
+    map: null, // Initially not attached to the map
+    radius: 30, // Adjust the radius for better visualization
+    opacity: 0.6 // Adjust opacity for clarity
+});
     // ✅ Fetch Data from CSV and Add Markers
     function loadClubData() {
         fetch("https://raw.githubusercontent.com/gabort-maps/football-maps/main/clubs.csv")
