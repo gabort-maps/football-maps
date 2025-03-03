@@ -295,10 +295,12 @@ document.getElementById("heatmap-checkbox").addEventListener("change", function(
         markers.forEach(marker => marker.setMap(null));
         superBubbles.forEach(bubble => bubble.setMap(null));
 
-        // Disable club size, region, and club name filters
+        // Disable club size and club name filters
         clubSizeFilter.disabled = true;
-        regionFilter.disabled = true;
         clubNameFilter.disabled = true;
+
+        // Keep region filter enabled
+        regionFilter.disabled = false;
     } else {
         // Hide heatmap
         heatmap.setMap(null);
@@ -307,13 +309,12 @@ document.getElementById("heatmap-checkbox").addEventListener("change", function(
         markers.forEach(marker => marker.setMap(window.map));
         superBubbles.forEach(bubble => bubble.setMap(window.map));
 
-        // Enable club size, region, and club name filters
+        // Enable all filters
         clubSizeFilter.disabled = false;
         regionFilter.disabled = false;
         clubNameFilter.disabled = false;
     }
 });
-                
                 // ✅ Populate Club Names in the Filter
                 populateClubNames();
             })
