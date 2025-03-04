@@ -14,12 +14,10 @@
         }
 
         /* 🔹 Map Container */
-      #map {
-    height: 100vh;
-    width: 100%;
-    position: relative; /* Ensure the map has a positioning context */
-    z-index: 1; /* Set a lower z-index than the search results */
-}
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
 
         /* 🔹 Filters Wrapper */
         #filters-wrapper {
@@ -100,39 +98,7 @@
                 bottom: 10px;
                 right: 10px;
             }
-    }        
- /* Autocomplete Results Container */
-#autocomplete-results {
-    border: 2px solid red; /* Debugging border */
-    max-height: 150px;
-    overflow-y: auto;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    background-color: #fff;
-    position: absolute;
-    top: calc(100% + 5px); /* Position the results below the search box */
-    left: 0; /* Align with the left edge of the search box */
-    width: 180px; /* Match the width of the search box */
-    z-index: 1000; /* Ensure this is higher than the map's z-index */
-    font-size: 12px; /* Match the font size of the search box */
-    font-family: inherit; /* Use the same font as the rest of the page */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-    display: none; /* Hide by default */
-}
-
-#autocomplete-results div {
-    padding: 5px;
-    cursor: pointer;
-    font-size: 12px; /* Match the font size of the search box */
-    font-family: inherit; /* Use the same font as the rest of the page */
-    color: #333; /* Match the text color of the search box */
-    line-height: 1.5; /* Add some spacing between lines */
-}
-
-#autocomplete-results div:hover {
-    background-color: #f8f9fa; /* Add a hover effect */
-}
-    
+        }
     </style>
 </head>
 <body>
@@ -163,12 +129,14 @@
             </select>
         </div>
 
-      <!-- Search Input for Club Names -->
-<div class="filter-box">
-    <label for="club-search">Search Club:</label>
-    <div style="position: relative;"> <!-- New wrapper -->
-        <input type="text" id="club-search" placeholder="Type to search..." style="font-size: 12px; padding: 4px 8px; width: 180px; border: 1px solid #ced4da; border-radius: 5px;">
-        <div id="autocomplete-results"></div>
+        <!-- Club Name Filter -->
+        <div class="filter-box">
+            <label for="club-name-filter">Club Name:</label>
+            <select id="club-name-filter" multiple onchange="filterMarkers()">
+                <option value="all" selected>All Clubs</option>
+                <!-- Club names will be dynamically populated -->
+            </select>
+        </div>
     </div>
 
     <!-- 🔹 Heatmap Toggle -->
@@ -479,7 +447,7 @@
         function filterMarkers() {
             let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
             let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
-           let selectedClubs = [document.getElementById("club-search").value.trim()];
+            let selectedClubs = Array.from(document.getElementById("club-name-filter").selectedOptions).map(opt => opt.value);
 
             const heatmapCheckbox = document.getElementById("heatmap-checkbox");
 
@@ -583,50 +551,6 @@
             document.getElementById("club-name-filter").value = "all"; // Default: "All Clubs"
             filterMarkers(); // ✅ Apply filtering immediately
         };
-   // Autocomplete Search Functionality
-document.getElementById("club-search").addEventListener("input", function() {
-    const searchTerm = this.value.toLowerCase(); // Get the search term
-    const resultsContainer = document.getElementById("autocomplete-results");
-    resultsContainer.innerHTML = ""; // Clear previous results
-
-    if (searchTerm.length > 0) {
-        // Filter markers to find matching club names
-        const matchingClubs = markers.filter(marker => 
-            marker.title.toLowerCase().includes(searchTerm)
-        ).map(marker => marker.title);
-
-        if (matchingClubs.length > 0) {
-            // Display matching clubs in the results container
-            matchingClubs.forEach(club => {
-                const resultItem = document.createElement("div");
-                resultItem.textContent = club;
-                resultItem.style.padding = "5px";
-                resultItem.style.cursor = "pointer";
-                resultItem.addEventListener("click", () => {
-                    // When a club is clicked, set the search input value and filter the map
-                    document.getElementById("club-search").value = club;
-                    resultsContainer.style.display = "none";
-                    filterMarkers(); // Apply filtering
-                });
-                resultsContainer.appendChild(resultItem);
-            });
-            resultsContainer.style.display = "block"; // Show results
-        } else {
-            resultsContainer.style.display = "none"; // Hide results if no matches
-        }
-    } else {
-        resultsContainer.style.display = "none"; // Hide results if search term is empty
-    }
-});
-
-// Hide autocomplete results when clicking outside
-document.addEventListener("click", function(event) {
-    const resultsContainer = document.getElementById("autocomplete-results");
-    const searchInput = document.getElementById("club-search");
-    if (event.target !== searchInput && event.target !== resultsContainer) {
-        resultsContainer.style.display = "none";
-    }
-});
     </script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXOfD-urA6wwow_1mz0O-bSJ9PjwXylhQ&callback=initMap&libraries=visualization,marker">
