@@ -108,18 +108,16 @@
     border-radius: 5px;
     background-color: #fff;
     position: absolute;
-    top: 100%; /* Position the results below the search box */
+    top: calc(100% + 5px); /* Position the results below the search box */
     left: 0; /* Align with the left edge of the search box */
-    width: 100%; /* Match the width of the search box */
+    width: 180px; /* Match the width of the search box */
     z-index: 1000;
-    margin-top: 5px; /* Add space between the search box and results */
     font-size: 12px; /* Match the font size of the search box */
     font-family: inherit; /* Use the same font as the rest of the page */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
     display: none; /* Hide by default */
 }
 
-/* Autocomplete Result Items */
 #autocomplete-results div {
     padding: 5px;
     cursor: pointer;
@@ -129,7 +127,6 @@
     line-height: 1.5; /* Add some spacing between lines */
 }
 
-/* Hover Effect for Result Items */
 #autocomplete-results div:hover {
     background-color: #f8f9fa; /* Add a hover effect */
 }
@@ -171,7 +168,6 @@
         <input type="text" id="club-search" placeholder="Type to search..." style="font-size: 12px; padding: 4px 8px; width: 180px; border: 1px solid #ced4da; border-radius: 5px;">
         <div id="autocomplete-results"></div>
     </div>
-</div>
 
     <!-- 🔹 Heatmap Toggle -->
     <div id="heatmap-toggle" style="position: absolute; top: 10px; left: calc(50% + 320px); z-index: 1000; background: rgba(255, 255, 255, 0.8); padding: 8px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
