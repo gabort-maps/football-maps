@@ -14,10 +14,12 @@
         }
 
         /* 🔹 Map Container */
-        #map {
-            height: 100vh;
-            width: 100%;
-        }
+      #map {
+    height: 100vh;
+    width: 100%;
+    position: relative; /* Ensure the map has a positioning context */
+    z-index: 1; /* Set a lower z-index than the search results */
+}
 
         /* 🔹 Filters Wrapper */
         #filters-wrapper {
@@ -111,7 +113,7 @@
     top: calc(100% + 5px); /* Position the results below the search box */
     left: 0; /* Align with the left edge of the search box */
     width: 180px; /* Match the width of the search box */
-    z-index: 1000;
+    z-index: 1000; /* Ensure this is higher than the map's z-index */
     font-size: 12px; /* Match the font size of the search box */
     font-family: inherit; /* Use the same font as the rest of the page */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
