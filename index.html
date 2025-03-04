@@ -98,35 +98,34 @@
                 bottom: 10px;
                 right: 10px;
             }
-  /* Autocomplete Results Container */
-#autocomplete-results {
+ #autocomplete-results {
+    all: initial; /* Reset all styles */
     max-height: 150px;
     overflow-y: auto;
     border: 1px solid #ced4da;
     border-radius: 5px;
     background-color: #fff;
     position: absolute;
-    width: 180px; /* Match the width of the search box */
+    width: 180px;
     z-index: 1000;
-    margin-top: 5px; /* Add space between the search box and results */
-    font-size: 12px; /* Match the font size of the search box */
-    font-family: inherit; /* Use the same font as the rest of the page */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-    display: none; /* Hide by default */
+    margin-top: 5px;
+    font-size: 12px;
+    font-family: inherit;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: none;
 }
 
-/* Autocomplete Result Items */
 #autocomplete-results div {
     padding: 5px;
     cursor: pointer;
-    font-size: 12px; /* Match the font size of the search box */
-    font-family: inherit; /* Use the same font as the rest of the page */
-    color: #333; /* Match the text color of the search box */
+    font-size: 12px;
+    font-family: inherit;
+    color: #333;
+    line-height: 1.5;
 }
 
-/* Hover Effect for Result Items */
 #autocomplete-results div:hover {
-    background-color: #f8f9fa; /* Add a hover effect */
+    background-color: #f8f9fa;
 }
     
     </style>
