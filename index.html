@@ -129,14 +129,12 @@
             </select>
         </div>
 
-        <!-- Club Name Filter -->
-        <div class="filter-box">
-            <label for="club-name-filter">Club Name:</label>
-            <select id="club-name-filter" multiple onchange="filterMarkers()">
-                <option value="all" selected>All Clubs</option>
-                <!-- Club names will be dynamically populated -->
-            </select>
-        </div>
+      <!-- Search Input for Club Names -->
+<div class="filter-box">
+    <label for="club-search">Search Club:</label>
+    <input type="text" id="club-search" placeholder="Type to search..." style="font-size: 12px; padding: 4px 8px; width: 180px; border: 1px solid #ced4da; border-radius: 5px;">
+    <div id="autocomplete-results" style="display: none; max-height: 150px; overflow-y: auto; border: 1px solid #ced4da; border-radius: 5px; background-color: #fff; position: absolute; width: 180px; z-index: 1000;"></div>
+</div>
     </div>
 
     <!-- 🔹 Heatmap Toggle -->
@@ -447,7 +445,7 @@
         function filterMarkers() {
             let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
             let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
-            let selectedClubs = Array.from(document.getElementById("club-name-filter").selectedOptions).map(opt => opt.value);
+           let selectedClubs = [document.getElementById("club-search").value.trim()];
 
             const heatmapCheckbox = document.getElementById("heatmap-checkbox");
 
@@ -551,6 +549,50 @@
             document.getElementById("club-name-filter").value = "all"; // Default: "All Clubs"
             filterMarkers(); // ✅ Apply filtering immediately
         };
+   // Autocomplete Search Functionality
+document.getElementById("club-search").addEventListener("input", function() {
+    const searchTerm = this.value.toLowerCase(); // Get the search term
+    const resultsContainer = document.getElementById("autocomplete-results");
+    resultsContainer.innerHTML = ""; // Clear previous results
+
+    if (searchTerm.length > 0) {
+        // Filter markers to find matching club names
+        const matchingClubs = markers.filter(marker => 
+            marker.title.toLowerCase().includes(searchTerm)
+        ).map(marker => marker.title);
+
+        if (matchingClubs.length > 0) {
+            // Display matching clubs in the results container
+            matchingClubs.forEach(club => {
+                const resultItem = document.createElement("div");
+                resultItem.textContent = club;
+                resultItem.style.padding = "5px";
+                resultItem.style.cursor = "pointer";
+                resultItem.addEventListener("click", () => {
+                    // When a club is clicked, set the search input value and filter the map
+                    document.getElementById("club-search").value = club;
+                    resultsContainer.style.display = "none";
+                    filterMarkers(); // Apply filtering
+                });
+                resultsContainer.appendChild(resultItem);
+            });
+            resultsContainer.style.display = "block"; // Show results
+        } else {
+            resultsContainer.style.display = "none"; // Hide results if no matches
+        }
+    } else {
+        resultsContainer.style.display = "none"; // Hide results if search term is empty
+    }
+});
+
+// Hide autocomplete results when clicking outside
+document.addEventListener("click", function(event) {
+    const resultsContainer = document.getElementById("autocomplete-results");
+    const searchInput = document.getElementById("club-search");
+    if (event.target !== searchInput && event.target !== resultsContainer) {
+        resultsContainer.style.display = "none";
+    }
+});
     </script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXOfD-urA6wwow_1mz0O-bSJ9PjwXylhQ&callback=initMap&libraries=visualization,marker">
