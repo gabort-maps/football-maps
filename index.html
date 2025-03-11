@@ -102,6 +102,7 @@
 .search-container {
     position: relative;
     width: 180px;
+    font-family: inherit; /* Match other filters */
 }
 
 #club-search {
@@ -110,6 +111,7 @@
     border: 1px solid #ced4da;
     border-radius: 5px;
     font-size: 12px;
+    color: #495057; /* Match dropdown text */
 }
 
 #search-results {
@@ -121,12 +123,14 @@
     border: 1px solid #ddd;
     z-index: 1001;
     display: none;
+    font-size: 12px; /* Match dropdown font */
 }
 
 .search-result-item {
-    padding: 5px;
+    padding: 6px 8px;
     cursor: pointer;
-    font-size: 12px;
+    color: #333; /* Match dropdown text */
+    transition: background-color 0.2s;
 }
 
 .search-result-item:hover {
@@ -153,6 +157,8 @@
 
 .selected-club span {
     cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
 }
         }
     </style>
@@ -224,6 +230,10 @@
         // ✅ NEW CODE START ✅
 let allClubs = []; // Stores all club names and regions
 let selectedClubs = new Set(); // Tracks selected clubs
+// Add this after the Set declaration
+const sanitizeHTML = (str) => {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+};        
 
 function populateClubNames() {
     markers.forEach(marker => {
@@ -253,14 +263,15 @@ function initializeSearch() {
                 div.className = 'search-result-item';
                 div.textContent = club.name;
                 div.onclick = () => {
-                    if (!selectedClubs.has(club.name)) {
-                        selectedClubs.add(club.name);
-                        updateSelectedClubs();
-                    }
-                    searchInput.value = '';
-                    resultsContainer.style.display = 'none';
-                    filterMarkers();
-                };
+    const sanitizedClub = sanitizeHTML(club.name); // Fix special characters
+    if (!selectedClubs.has(sanitizedClub)) {
+        selectedClubs.add(sanitizedClub);
+        updateSelectedClubs();
+        filterMarkers(); // Force immediate update
+    }
+    searchInput.value = '';
+    resultsContainer.style.display = 'none';
+};
                 resultsContainer.appendChild(div);
             });
             
@@ -275,7 +286,9 @@ function initializeSearch() {
         selectedClubs.forEach(club => {
             const tag = document.createElement('div');
             tag.className = 'selected-club';
-            tag.innerHTML = `${club} <span onclick="removeClub('${club}')">×</span>`;
+          // Properly escape club names
+const encodedClub = encodeURIComponent(club);
+tag.innerHTML = `${club} <span onclick="removeClub('${encodedClub}')">×</span>`;
             selectedContainer.appendChild(tag);
         });
         
@@ -288,7 +301,8 @@ function initializeSearch() {
 }
 
 function removeClub(clubName) {
-    selectedClubs.delete(clubName);
+   const decodedClub = decodeURIComponent(clubName);
+selectedClubs.delete(decodedClub);
     document.getElementById('search-results').style.display = 'none';
     updateSelectedClubs();
     filterMarkers();
@@ -607,9 +621,10 @@ function removeClub(clubName) {
                         selectedRegions.includes(region);
 
                     // Check if the marker matches the club name filter
-                    let clubNameMatch =
-                        selectedClubs.includes("all") || // "All Clubs" is selected
-                        selectedClubs.includes(clubName);
+                    let clubNameMatch = true;
+if (selectedClubsArray.length > 0) {
+    clubNameMatch = selectedClubsArray.includes(clubName);
+}
 
                     // Show or hide the marker based on all filters
                     if (selectedClubs.includes("all")) {
