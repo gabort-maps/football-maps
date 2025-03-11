@@ -98,6 +98,62 @@
                 bottom: 10px;
                 right: 10px;
             }
+/* Club Search Styles */
+.search-container {
+    position: relative;
+    width: 180px;
+}
+
+#club-search {
+    width: 100%;
+    padding: 4px 8px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+#search-results {
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ddd;
+    z-index: 1001;
+    display: none;
+}
+
+.search-result-item {
+    padding: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.search-result-item:hover {
+    background-color: #f8f9fa;
+}
+
+#selected-clubs {
+    margin-top: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+}
+
+.selected-club {
+    background: #007bff;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.selected-club span {
+    cursor: pointer;
+}
         }
     </style>
 </head>
@@ -129,14 +185,15 @@
             </select>
         </div>
 
-        <!-- Club Name Filter -->
-        <div class="filter-box">
-            <label for="club-name-filter">Club Name:</label>
-            <select id="club-name-filter" multiple onchange="filterMarkers()">
-                <option value="all" selected>All Clubs</option>
-                <!-- Club names will be dynamically populated -->
-            </select>
-        </div>
+       <!-- Club Name Search -->
+<div class="filter-box">
+    <label for="club-search">Club Name:</label>
+    <div class="search-container">
+        <input type="text" id="club-search" placeholder="Start typing...">
+        <div id="search-results"></div>
+        <div id="selected-clubs"></div>
+    </div>
+</div>
     </div>
 
     <!-- 🔹 Heatmap Toggle -->
@@ -164,6 +221,79 @@
         let groupedLocations = {}; // Stores grouped club locations
         let heatmapData = []; // Stores heatmap data points
         let heatmap; // Stores the heatmap layer
+        // ✅ NEW CODE START ✅
+let allClubs = []; // Stores all club names and regions
+let selectedClubs = new Set(); // Tracks selected clubs
+
+function populateClubNames() {
+    markers.forEach(marker => {
+        allClubs.push({
+            name: marker.title,
+            region: marker.region
+        });
+    });
+}
+
+function initializeSearch() {
+    const searchInput = document.getElementById('club-search');
+    const resultsContainer = document.getElementById('search-results');
+    const selectedContainer = document.getElementById('selected-clubs');
+
+    searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        resultsContainer.innerHTML = '';
+        
+        if (searchTerm.length > 0) {
+            const filtered = allClubs.filter(club => 
+                club.name.toLowerCase().includes(searchTerm)
+            );
+            
+            filtered.forEach(club => {
+                const div = document.createElement('div');
+                div.className = 'search-result-item';
+                div.textContent = club.name;
+                div.onclick = () => {
+                    if (!selectedClubs.has(club.name)) {
+                        selectedClubs.add(club.name);
+                        updateSelectedClubs();
+                    }
+                    searchInput.value = '';
+                    resultsContainer.style.display = 'none';
+                    filterMarkers();
+                };
+                resultsContainer.appendChild(div);
+            });
+            
+            resultsContainer.style.display = filtered.length ? 'block' : 'none';
+        } else {
+            resultsContainer.style.display = 'none';
+        }
+    });
+
+    function updateSelectedClubs() {
+        selectedContainer.innerHTML = '';
+        selectedClubs.forEach(club => {
+            const tag = document.createElement('div');
+            tag.className = 'selected-club';
+            tag.innerHTML = `${club} <span onclick="removeClub('${club}')">×</span>`;
+            selectedContainer.appendChild(tag);
+        });
+        
+        // Disable other filters when clubs are selected
+        const disableFilters = selectedClubs.size > 0;
+        document.getElementById('filter').disabled = disableFilters;
+        document.getElementById('region-filter').disabled = disableFilters;
+        document.getElementById('heatmap-checkbox').disabled = disableFilters;
+    }
+}
+
+function removeClub(clubName) {
+    selectedClubs.delete(clubName);
+    document.getElementById('search-results').style.display = 'none';
+    updateSelectedClubs();
+    filterMarkers();
+}
+// ✅ NEW CODE END ✅
 
         // ✅ Haversine formula to calculate distance between two lat/lng points
         function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -239,6 +369,7 @@
 
             // ✅ Fetch the CSV Data
             loadClubData();
+            initializeSearch(); // Activate the search functionality
         };
 
         // ✅ Fetch Data from CSV and Add Markers
@@ -431,23 +562,12 @@
             return "blue"; // Very small clubs
         }
 
-        // ✅ Function to Populate Club Names
-        function populateClubNames() {
-            const clubNameFilter = document.getElementById("club-name-filter");
-            markers.forEach(marker => {
-                const clubName = marker.title;
-                const option = document.createElement("option");
-                option.value = clubName;
-                option.text = clubName;
-                clubNameFilter.appendChild(option);
-            });
-        }
-
+       
         // ✅ Filtering function
         function filterMarkers() {
             let selectedOptions = Array.from(document.getElementById("filter").selectedOptions).map(opt => opt.value);
             let selectedRegions = Array.from(document.getElementById("region-filter").selectedOptions).map(opt => opt.value);
-            let selectedClubs = Array.from(document.getElementById("club-name-filter").selectedOptions).map(opt => opt.value);
+           let selectedClubs = Array.from(selectedClubs); // Use the new Set instead of the old dropdown
 
             const heatmapCheckbox = document.getElementById("heatmap-checkbox");
 
@@ -546,7 +666,6 @@
 
         // ✅ Ensure default selections are applied when the page loads
         window.onload = function () {
-            document.getElementById("filter").value = "all"; // Default: "All Clubs"
             document.getElementById("region-filter").value = "all"; // Default: "All Regions"
             document.getElementById("club-name-filter").value = "all"; // Default: "All Clubs"
             filterMarkers(); // ✅ Apply filtering immediately
